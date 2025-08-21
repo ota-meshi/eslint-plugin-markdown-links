@@ -1,7 +1,7 @@
 import type { Options } from "dead-or-alive";
 import { deadOrAlive } from "dead-or-alive";
 import { runAsWorker } from "synckit";
-import { toRegExp } from "../utils/regexp.ts";
+import { toRegExp } from "../utils/regexp.js";
 
 export type SerializableOptions = Omit<Options, "anchorAllowlist"> & {
   allowedAnchors: Record<string, string>;
