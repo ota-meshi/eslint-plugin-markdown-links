@@ -34,5 +34,6 @@ jobs:
           version: npm run changeset:version
           publish: npm run changeset:publish
         env:
+          SYNCKIT_TS_RUNNER: oxc
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
