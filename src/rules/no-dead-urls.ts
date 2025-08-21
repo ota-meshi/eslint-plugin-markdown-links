@@ -15,9 +15,8 @@ const workerPath = import.meta.filename.endsWith(".ts")
 if (!fs.existsSync(workerPath)) {
   throw new Error(`Worker file not found: ${workerPath}`);
 }
-const deadOrAliveUrls = createSyncFn<
-  (params: doaWorker.Params) => doaWorker.Result
->(`${workerPath.slice(0, -2)}js`);
+const deadOrAliveUrls =
+  createSyncFn<(params: doaWorker.Params) => doaWorker.Result>(workerPath);
 
 const allLinkStatus: Record<string, doaWorker.UrlStatus | undefined> =
   Object.create(null);
