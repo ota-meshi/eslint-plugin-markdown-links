@@ -45,7 +45,7 @@ This rule is heavily inspired by [remark-lint-no-dead-urls], and many of its opt
   "markdown-links/no-dead-urls": [
     "error",
     {
-      "ignoreLocalhost": false,
+      "ignoreLocalhost": true,
       "ignoreUrls": [],
       "checkAnchor": true,
       "anchorAllows": [["/./", "/^:~:/"]],
