@@ -1,7 +1,6 @@
 import type { Options } from "dead-or-alive";
 import { deadOrAlive } from "dead-or-alive";
 import { runAsWorker } from "synckit";
-import { toRegExp } from "../utils/regexp.js";
 
 export type SerializableOptions = Omit<Options, "anchorAllowlist"> & {
   allowedAnchors: Record<string, string>;
@@ -27,6 +26,7 @@ runAsWorker(checkUrls);
  * Check if the given URLs are alive or not.
  */
 async function checkUrls(params: Params): Promise<Result> {
+  const { toRegExp } = await import("../utils/regexp.ts");
   const deadOrAliveOptions: Options = {
     ...params.deadOrAliveOptions,
     findUrls: false,
