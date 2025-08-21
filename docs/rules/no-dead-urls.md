@@ -3,13 +3,12 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "markdown-links/no-dead-urls"
 description: "disallow dead external link urls"
+since: "v0.1.0"
 ---
 
 # markdown-links/no-dead-urls
 
 > disallow dead external link urls
-
-- ❗ <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## 📖 Rule Details
 
@@ -74,12 +73,12 @@ This rule is heavily inspired by [remark-lint-no-dead-urls], and many of its opt
 [dead-or-alive]: https://github.com/wooorm/dead-or-alive
 [remark-lint-no-dead-urls]: https://github.com/remarkjs/remark-lint-no-dead-urls
 
-## 🔍 Implementation
+## 🚀 Version
 
-<!-- eslint-disable markdown-links/no-dead-urls -- Auto generated -->
+This rule was introduced in eslint-plugin-markdown-links v0.1.0
+
+## 🔍 Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-markdown-links/blob/main/src/rules/no-dead-urls.ts)
 - [Test source](https://github.com/ota-meshi/eslint-plugin-markdown-links/blob/main/tests/src/rules/no-dead-urls.ts)
 - [Test fixture sources](https://github.com/ota-meshi/eslint-plugin-markdown-links/tree/main/tests/fixtures/rules/no-dead-urls)
-
-<!-- eslint-enable markdown-links/no-dead-urls -- Auto generated -->
