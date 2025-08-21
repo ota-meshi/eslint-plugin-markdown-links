@@ -36,6 +36,9 @@ jobs:
       - name: Install Packages
         run: npm install -f
       - name: Test
-        run: npm test
+        run: |
+          node -v
+          echo $SYNCKIT_TS_RUNNER
+          npm test
         env:
           SYNCKIT_TS_RUNNER: tsx
