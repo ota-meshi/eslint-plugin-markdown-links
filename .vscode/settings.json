@@ -1,0 +1,35 @@
+{
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "vue",
+    "typescript",
+    "json",
+    "jsonc",
+    "markdown",
+    "instructions",
+    "yaml"
+  ],
+  "typescript.validate.enable": true,
+  "javascript.validate.enable": false,
+  "css.validate": false,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.stylelint": "explicit",
+    "source.fixAll.markdownlint": "never"
+  },
+  "stylelint.validate": [
+    "css",
+    "html",
+    "less",
+    "postcss",
+    "sass",
+    "scss",
+    "vue",
+    "vue-html",
+    "vue-postcss",
+    "stylus"
+  ],
+  "chat.mcp.enabled": true
+}

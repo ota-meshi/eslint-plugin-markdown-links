@@ -137,3 +137,15 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Repo
+/typings/eslint/lib
+/lib
+
+# docs
+/docs/assets
+/docs/**/*.html
+/docs/.vitepress/.temp
+/docs/.vitepress/cache
+/docs/.vitepress/build-system/shim
+/playground/node_modules/

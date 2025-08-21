@@ -1,0 +1,143 @@
+# eslint-snapshot-rule-tester format: v1
+
+
+Test: no-dead-urls >> invalid
+Filename: tests/fixtures/rules/no-dead-urls/invalid/dead-links-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Plugins: unable to serialize
+
+Code:
+  1 | # Dead Links
+  2 |
+  3 | This is a link to [Dead Site](https://this-domain-does-not-exist-12345.com) which should be dead.
+    |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  4 |
+  5 | [Another dead link](https://invalid-url-that-returns-404.example)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [2]
+  6 |
+  7 | [Reference to dead site][dead]
+  8 |
+  9 | [dead]: https://non-existent-domain-for-testing.xyz
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [3]
+ 10 |
+
+[1] The link 'https://this-domain-does-not-exist-12345.com/' appears to be dead or unreachable. Please check the URL or update it to a working link.
+[2] The link 'https://invalid-url-that-returns-404.example/' appears to be dead or unreachable. Please check the URL or update it to a working link.
+[3] The link 'https://non-existent-domain-for-testing.xyz/' appears to be dead or unreachable. Please check the URL or update it to a working link.
+---
+
+
+Test: no-dead-urls >> invalid
+Filename: tests/fixtures/rules/no-dead-urls/invalid/options/anchor-allowlist-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Options:
+  - checkAnchor: true
+    allowedAnchors:
+      https://eslint-online-playground.netlify.app/: eslint-plugin-markdown-links
+Plugins: unable to serialize
+
+Code:
+  1 | # `allowedAnchors` Option: Not Allowlisted Anchor
+  2 |
+  3 | [not-allowlisted](https://github.com/ota-meshi/eslint-plugin-markdown-links#definitely-not-exist)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  4 | [allowlisted](https://eslint-online-playground.netlify.app/#eslint-plugin-markdown-links)
+  5 | [no-anchor](https://eslint-online-playground.netlify.app/)
+  6 |
+
+[1] The anchor fragment 'definitely-not-exist' in 'https://github.com/ota-meshi/eslint-plugin-markdown-links' does not exist on the page. Please remove the fragment if unnecessary, or update it to point to an existing element.
+---
+
+
+Test: no-dead-urls >> invalid
+Filename: tests/fixtures/rules/no-dead-urls/invalid/options/check-anchor-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Options:
+  - checkAnchor: true
+Plugins: unable to serialize
+
+Code:
+  1 | # `checkAnchor` Option: Report Dead Anchor
+  2 |
+  3 | [anchor-ok](https://ota-meshi.github.io/eslint-plugin-markdown-preferences/#introduction)
+  4 | [anchor-ng](https://ota-meshi.github.io/eslint-plugin-markdown-preferences/#not-exist-anchor)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  5 | [no-anchor](https://ota-meshi.github.io/eslint-plugin-markdown-preferences)
+  6 |
+
+[1] The anchor fragment 'not-exist-anchor' in 'https://ota-meshi.github.io/eslint-plugin-markdown-preferences/' does not exist on the page. Please remove the fragment if unnecessary, or update it to point to an existing element.
+---
+
+
+Test: no-dead-urls >> invalid
+Filename: tests/fixtures/rules/no-dead-urls/invalid/options/ignore-localhost-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Options:
+  - ignoreLocalhost: false
+Plugins: unable to serialize
+
+Code:
+  1 | # `ignoreLocalhost` Option: Invalid Localhost Links
+  2 |
+  3 | [localhost](http://localhost:1234/dead)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  4 | [127.0.0.1](http://127.0.0.1:8080/dead)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [2]
+  5 | [external](http://example.com/dead)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [3]
+  6 |
+
+[1] The link 'http://localhost:1234/dead' appears to be dead or unreachable. Please check the URL or update it to a working link.
+[2] The link 'http://127.0.0.1:8080/dead' appears to be dead or unreachable. Please check the URL or update it to a working link.
+[3] The link 'http://example.com/dead' appears to be dead or unreachable. Please check the URL or update it to a working link.
+---
+
+
+Test: no-dead-urls >> invalid
+Filename: tests/fixtures/rules/no-dead-urls/invalid/options/ignore-urls-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Options:
+  - ignoreUrls:
+      - /ignore-me\.com/u
+Plugins: unable to serialize
+
+Code:
+  1 | # `ignoreUrls` Option: Invalid URL Pattern
+  2 |
+  3 | [ignored](http://ignore-me.com/dead)
+  4 | [checked](http://example.com/dead)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  5 |
+
+[1] The link 'http://example.com/dead' appears to be dead or unreachable. Please check the URL or update it to a working link.
+---
+
+
+Test: no-dead-urls >> invalid
+Filename: tests/fixtures/rules/no-dead-urls/invalid/options/timeout-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Options:
+  - timeout: 1
+Plugins: unable to serialize
+
+Code:
+  1 | # `timeout` Option: Timeout Occurred
+  2 |
+  3 | [timeout](http://10.255.255.1/dead)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  4 |
+
+[1] The link 'http://10.255.255.1/dead' appears to be dead or unreachable. Please check the URL or update it to a working link.
+---

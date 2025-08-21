@@ -1,0 +1,10 @@
+{
+  "options": [
+    {
+      "checkAnchor": true,
+      "allowedAnchors": {
+        "https://eslint-online-playground.netlify.app/": "eslint-plugin-markdown-links"
+      }
+    }
+  ]
+}
