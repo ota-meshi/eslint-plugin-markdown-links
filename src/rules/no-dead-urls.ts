@@ -1,5 +1,5 @@
 import { createSyncFn } from "synckit";
-import type { Link, Definition } from "mdast";
+import type { Link, Definition, Image } from "mdast";
 import { createRule } from "../utils/index.ts";
 import type * as doaWorker from "../workers/dead-or-alive-worker.ts";
 import { toRegExp } from "../utils/regexp.ts";
@@ -93,7 +93,7 @@ export default createRule<
     },
   },
   create(context) {
-    const links = new Map<string, (Link | Definition)[]>();
+    const links = new Map<string, (Link | Definition | Image)[]>();
     const options = context.options[0];
     const ignoreLocalhost = options?.ignoreLocalhost ?? true;
     const ignoreUrls = options?.ignoreUrls?.map((url) => toRegExp(url)) ?? [];
@@ -166,7 +166,7 @@ export default createRule<
           }
         }
       },
-      "link, definition"(node: Link | Definition) {
+      "link, definition, image"(node: Link | Definition | Image) {
         const url = node.url;
         if (!url || !url.startsWith("http") || isIgnore(url)) return;
         const normalized = normalizeUrl(url);
