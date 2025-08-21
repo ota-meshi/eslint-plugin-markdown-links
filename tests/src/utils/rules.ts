@@ -3,7 +3,7 @@ import assert from "assert";
 import path from "path";
 import fs from "fs";
 
-import { rules as allRules } from "../../../src/utils/rules.js";
+import { rules as allRules } from "../../../src/utils/rules.ts";
 import { fileURLToPath } from "url";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
