@@ -20,6 +20,8 @@ jobs:
         run: npm run lint
       - name: tsc
         run: npm run tsc
+      - name: load
+        run: node lib/index.js
   test:
     runs-on: ubuntu-latest
     strategy:

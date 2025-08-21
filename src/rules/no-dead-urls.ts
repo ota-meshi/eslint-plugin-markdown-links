@@ -4,17 +4,19 @@ import { createRule } from "../utils/index.ts";
 import type * as doaWorker from "../workers/dead-or-alive-worker.ts";
 import { toRegExp } from "../utils/regexp.ts";
 import path from "node:path";
+import fs from "node:fs";
 
 const RE_IS_LOCALHOST =
   /^https?:\/\/(?:localhost|127\.0\.0\.1|0\.0\.0\.0|::1)(?::\d+)?/u;
 
-const deadOrAliveUrls = createSyncFn<
-  (params: doaWorker.Params) => doaWorker.Result
->(
-  import.meta.filename.endsWith(".ts")
-    ? path.resolve(import.meta.dirname, "../workers/dead-or-alive-worker.js")
-    : path.resolve(import.meta.dirname, "./dead-or-alive-worker.js"),
-);
+const workerPath = import.meta.filename.endsWith(".ts")
+  ? path.resolve(import.meta.dirname, "../workers/dead-or-alive-worker.ts")
+  : path.resolve(import.meta.dirname, "./dead-or-alive-worker.js");
+if (!fs.existsSync(workerPath)) {
+  throw new Error(`Worker file not found: ${workerPath}`);
+}
+const deadOrAliveUrls =
+  createSyncFn<(params: doaWorker.Params) => doaWorker.Result>(workerPath);
 
 const allLinkStatus: Record<string, doaWorker.UrlStatus | undefined> =
   Object.create(null);
