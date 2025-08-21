@@ -31,6 +31,8 @@ jobs:
       - name: Build
         run: |+
           npm run docs:build
+        env:
+          SYNCKIT_TS_RUNNER: oxc
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
