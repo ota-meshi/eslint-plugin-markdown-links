@@ -2,6 +2,7 @@ import type { Options } from "dead-or-alive";
 import { deadOrAlive } from "dead-or-alive";
 import { runAsWorker } from "synckit";
 import { toRegExp } from "../utils/regexp.ts";
+import { getCached, writeCache } from "./lib/cache.ts";
 
 export type SerializableOptions = Omit<Options, "anchorAllowlist"> & {
   allowedAnchors: Record<string, string>;
@@ -38,9 +39,31 @@ async function checkUrls(params: Params): Promise<Result> {
   };
   const result = await Promise.all(
     params.urls.map(async (url) => {
-      return checkUrl(url, deadOrAliveOptions);
+      return checkUrlWithCache(url, deadOrAliveOptions);
     }),
   );
+
+  return result;
+}
+
+/**
+ * Check if the given URL is alive.
+ */
+async function checkUrlWithCache(
+  url: string,
+  deadOrAliveOptions: Options,
+): Promise<UrlStatus> {
+  const cached = await getCached(url, deadOrAliveOptions);
+
+  if (cached) {
+    return cached;
+  }
+
+  const result = await checkUrl(url, deadOrAliveOptions);
+
+  if (result.status !== "ignored") {
+    await writeCache(url, deadOrAliveOptions, result);
+  }
 
   return result;
 }
