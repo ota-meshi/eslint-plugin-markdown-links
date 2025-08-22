@@ -63,6 +63,7 @@
   },
   "dependencies": {
     "dead-or-alive": "^1.0.4",
+    "sdbm": "^2.0.0",
     "synckit": "^0.11.11"
   },
   "devDependencies": {
@@ -78,6 +79,7 @@
     "@types/eslint-scope": "^8.0.0",
     "@types/eslint-utils": "^3.0.5",
     "@types/estree": "^1.0.6",
+    "@types/imurmurhash": "^0.1.4",
     "@types/json-schema": "^7.0.15",
     "@types/mdast": "^4.0.4",
     "@types/mocha": "^10.0.10",

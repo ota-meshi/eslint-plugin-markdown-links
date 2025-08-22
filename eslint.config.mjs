@@ -185,10 +185,6 @@ export default defineConfig([
         "error",
         {
           ignoreUrls: [
-            // TODO Release
-            String(
-              /^https:\/\/ota-meshi\.github\.io\/eslint-plugin-markdown-links\//u,
-            ),
             "https://www.npmjs.com/package/eslint-plugin-markdown-links",
           ],
           allowedAnchors: {
@@ -301,6 +297,7 @@ export default defineConfig([
       "docs/.vitepress/dist/",
       ".changeset/",
       "playground/src/example.md",
+      "**/.cached/**/*.*",
     ],
   },
 ]);

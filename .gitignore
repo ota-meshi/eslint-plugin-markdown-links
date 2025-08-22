@@ -141,6 +141,7 @@ vite.config.ts.timestamp-*
 # Repo
 /typings/eslint/lib
 /lib
+.cached
 
 # docs
 /docs/assets
