@@ -18,9 +18,6 @@ if (!fs.existsSync(workerPath)) {
 const deadOrAliveUrls =
   createSyncFn<(params: doaWorker.Params) => doaWorker.Result>(workerPath);
 
-const allLinkStatus: Record<string, doaWorker.UrlStatus | undefined> =
-  Object.create(null);
-
 export default createRule<
   [
     {
@@ -129,8 +126,8 @@ export default createRule<
 
     return {
       "root:exit"() {
-        for (const result of deadOrAliveUrls({
-          urls: [...links.keys()].filter((url) => !allLinkStatus[url]),
+        for (const status of deadOrAliveUrls({
+          urls: [...links.keys()],
           deadOrAliveOptions: {
             checkAnchor,
             maxRedirects,
@@ -139,28 +136,23 @@ export default createRule<
             allowedAnchors,
           },
         })) {
-          allLinkStatus[result.url] = result;
-        }
-
-        for (const [url, nodes] of links) {
-          const status = allLinkStatus[url];
           if (status?.status !== "dead") continue;
-
+          const nodes = links.get(status.url) ?? [];
           for (const node of nodes) {
             if (status.missingAnchor) {
               context.report({
                 node,
                 messageId: "missingAnchor",
                 data: {
-                  url: removeFragment(url),
-                  fragment: getFragment(url),
+                  url: removeFragment(status.url),
+                  fragment: getFragment(status.url),
                 },
               });
             } else {
               context.report({
                 node,
                 messageId: "deadLink",
-                data: { url },
+                data: { url: status.url },
               });
             }
           }
