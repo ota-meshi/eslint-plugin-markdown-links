@@ -1,7 +1,7 @@
 import { defineConfig } from "eslint/config";
 // import markdown from "@eslint/markdown";
 import markdownLinks from "eslint-plugin-markdown-links";
-const ruleEntries = Object.entries(markdownPreferences.rules).filter(
+const ruleEntries = Object.entries(markdownLinks.rules).filter(
   ([, rule]) => !rule.meta.deprecated,
 );
 export default defineConfig([
