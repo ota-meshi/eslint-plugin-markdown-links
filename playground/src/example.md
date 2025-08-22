@@ -1,9 +1,7 @@
-# Dead Links
+# Playground
 
-This is a link to [Dead Site](https://this-domain-does-not-exist-12345.com) which should be dead.
+Enjoy the unofficial [ESLint Online Playground](https://eslint-online-playground.netlify.app/).
 
-[Another dead link](https://invalid-url-that-returns-404.example)
+[This](https://eslint-online-playground.netlify.app/dead) is a broken link.
 
-[Reference to dead site][dead]
-
-[dead]: https://non-existent-domain-for-testing.xyz
+When using `eslint-plugin-markdown-links` in the online playground, due to CORS issues, only links within <https://eslint-online-playground.netlify.app/> can be checked.
