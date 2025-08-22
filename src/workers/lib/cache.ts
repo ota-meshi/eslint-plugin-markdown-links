@@ -2,6 +2,7 @@ import path from "node:path";
 import fs from "node:fs";
 import type { UrlStatus } from "../dead-or-alive-worker.ts";
 import type { Options } from "dead-or-alive";
+import sdbm from "sdbm";
 
 const TTL_FOR_ALIVE = 1000 * 60 * 60 * 24; // 1day
 const TTL_FOR_DEAD = 1000 * 60; // 1minute
@@ -74,17 +75,15 @@ function urlToCachedFilePath(
   } catch {
     return null;
   }
+  const pathname = url.pathname.split("/").filter(Boolean).join("/");
   return path.join(
     CACHED_ROOT_PATH,
     deadOrAliveOptions.checkAnchor
       ? "check-anchor-enable"
       : "check-anchor-disable",
     url.protocol.replaceAll(":", ""),
-    `${url.host}/${url.pathname}${url.search}${url.hash}`
-      .replaceAll("__", "____")
-      .replaceAll(":", "__c__")
-      .replaceAll("*", "__s__")
-      .replaceAll("?", "__q__"),
+    url.host.replaceAll(":", "__c__"),
+    sdbm(`${pathname}${url.search}${url.hash}`).toString(36),
     "status.json",
   );
 }
