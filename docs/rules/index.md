@@ -16,5 +16,6 @@ The rules with the following star ⭐ are included in the `plugin.configs.recomm
 | Rule ID | Description | Fixable | RECOMMENDED |
 |:--------|:------------|:-------:|:-----------:|
 | [markdown-links/no-dead-urls](./no-dead-urls.md) | disallow dead external link urls |  |  |
+| [markdown-links/no-missing-path](./no-missing-path.md) | ... |  | ⭐ |
 
 <!-- prettier-ignore-end -->

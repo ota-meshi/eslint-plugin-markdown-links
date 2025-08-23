@@ -63,6 +63,7 @@
   },
   "dependencies": {
     "dead-or-alive": "^1.0.4",
+    "github-slugger": "^2.0.0",
     "sdbm": "^2.0.0",
     "synckit": "^0.11.11"
   },

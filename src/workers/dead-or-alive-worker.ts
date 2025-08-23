@@ -1,8 +1,8 @@
 import type { Options } from "dead-or-alive";
 import { deadOrAlive } from "dead-or-alive";
 import { runAsWorker } from "synckit";
-import { toRegExp } from "../utils/regexp.ts";
 import { getCached, writeCache } from "./lib/cache.ts";
+import { allowedAnchorsToAnchorAllowlist } from "../utils/allowed-anchors-option.ts";
 
 export type SerializableOptions = Omit<Options, "anchorAllowlist"> & {
   allowedAnchors: Record<string, string>;
@@ -31,11 +31,9 @@ async function checkUrls(params: Params): Promise<Result> {
   const deadOrAliveOptions: Options = {
     ...params.deadOrAliveOptions,
     findUrls: false,
-    anchorAllowlist: params.deadOrAliveOptions.allowedAnchors
-      ? Object.entries(params.deadOrAliveOptions.allowedAnchors).map(
-          ([text, url]) => [toRegExp(text), toRegExp(url)] as [RegExp, RegExp],
-        )
-      : undefined,
+    anchorAllowlist: allowedAnchorsToAnchorAllowlist(
+      params.deadOrAliveOptions.allowedAnchors,
+    ),
   };
   const result = await Promise.all(
     params.urls.map(async (url) => {

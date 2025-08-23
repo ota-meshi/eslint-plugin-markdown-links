@@ -18,6 +18,11 @@ export interface RuleOptions {
    * @see https://ota-meshi.github.io/eslint-plugin-markdown-links/rules/no-dead-urls.html
    */
   'markdown-links/no-dead-urls'?: Linter.RuleEntry<MarkdownLinksNoDeadUrls>
+  /**
+   * ...
+   * @see https://ota-meshi.github.io/eslint-plugin-markdown-links/rules/no-missing-path.html
+   */
+  'markdown-links/no-missing-path'?: Linter.RuleEntry<[]>
 }
 
 /* ======= Declarations ======= */

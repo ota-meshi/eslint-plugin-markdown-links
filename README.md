@@ -97,6 +97,7 @@ The rules with the following star ⭐ are included in the configs.
 | Rule ID | Description | Fixable | RECOMMENDED |
 |:--------|:------------|:-------:|:-----------:|
 | [markdown-links/no-dead-urls](https://ota-meshi.github.io/eslint-plugin-markdown-links/rules/no-dead-urls.html) | disallow dead external link urls |  |  |
+| [markdown-links/no-missing-path](https://ota-meshi.github.io/eslint-plugin-markdown-links/rules/no-missing-path.html) | ... |  | ⭐ |
 
 <!-- prettier-ignore-end -->
 

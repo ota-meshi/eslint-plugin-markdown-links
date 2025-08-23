@@ -1,0 +1,85 @@
+# eslint-snapshot-rule-tester format: v1
+
+
+Test: no-missing-path >> invalid
+Filename: tests/fixtures/rules/no-missing-path/invalid/basic-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Plugins: unable to serialize
+
+Code:
+  1 | # Invalid: Non-existent Path
+  2 |
+  3 | - [notfound](notfound.md)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~ [1]
+  4 |
+  5 | # Invalid: Non-existent Path (Relative Path)
+  6 |
+  7 | - [notfound](./notfound.md)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~ [2]
+  8 |
+  9 | # Invalid: Non-existent Path (Parent Directory)
+ 10 |
+ 11 | - [notfound](../notfound.md)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~ [3]
+ 12 |
+ 13 | # Invalid: Non-existent Path (Image)
+ 14 |
+ 15 | - ![notfound](notfound.png)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~ [4]
+ 16 |
+ 17 | # Invalid: Non-existent Path With Anchor
+ 18 |
+ 19 | - [notfound](notfound.md#anchor)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [5]
+ 20 |
+ 21 | # Invalid: Non-existent Path With Anchor (Image)
+ 22 |
+ 23 | - ![notfound](notfound.md#anchor)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [6]
+ 24 |
+ 25 | # Invalid: Non-existent Anchor
+ 26 |
+ 27 | - [missing-anchor](target.md#not-exist-anchor)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [7]
+ 28 | - [missing-anchor](../test-target.md#not-exist-anchor)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [8]
+ 29 |
+ 30 | # Valid: Existing Path
+ 31 |
+ 32 | - [target](target.md)
+ 33 | - [target](./target.md)
+ 34 | - [target](../test-target.md)
+ 35 |
+ 36 | # Valid: Existing Anchor
+ 37 |
+ 38 | - [target](../test-target.md#a)
+ 39 | - [target](../test-target.md#custom-id)
+ 40 |
+ 41 | # Valid: External Link
+ 42 |
+ 43 | - [external](https://example.com)
+ 44 |
+ 45 | # Valid: Anchor Only
+ 46 |
+ 47 | - [anchor](#section)
+ 48 |
+ 49 | # Invalid: Non-existent Path (Definition)
+ 50 |
+ 51 | - [notfound]
+ 52 |
+ 53 | [notfound]: not-found.md
+    | ^~~~~~~~~~~~~~~~~~~~~~~~ [9]
+ 54 |
+
+[1] The file 'notfound.md' does not exist. Please check the path or update it to a valid file.
+[2] The file './notfound.md' does not exist. Please check the path or update it to a valid file.
+[3] The file '../notfound.md' does not exist. Please check the path or update it to a valid file.
+[4] The file 'notfound.png' does not exist. Please check the path or update it to a valid file.
+[5] The file 'notfound.md#anchor' does not exist. Please check the path or update it to a valid file.
+[6] The file 'notfound.md#anchor' does not exist. Please check the path or update it to a valid file.
+[7] The anchor 'not-exist-anchor' is not defined in 'tests/fixtures/rules/no-missing-path/invalid/target.md'.
+[8] The anchor 'not-exist-anchor' is not defined in 'tests/fixtures/rules/no-missing-path/test-target.md'.
+[9] The file 'not-found.md' does not exist. Please check the path or update it to a valid file.
+---
