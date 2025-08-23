@@ -1,5 +1,5 @@
 import { createRule } from "../utils/index.ts";
-import type { Link, Image, Definition, Heading } from "mdast";
+import type { Link, Image, Definition, Heading, Root } from "mdast";
 import fs from "node:fs";
 import path from "node:path";
 import GithubSlugger from "github-slugger";
@@ -8,6 +8,7 @@ import { allowedAnchorsToAnchorAllowlist } from "../utils/allowed-anchors-option
 import { parseMarkdown } from "../utils/markdown-parser/parser.ts";
 import { traverse } from "../utils/ast.ts";
 import { iterateAttrs, iterateTagAndText } from "../utils/html.ts";
+import { LRUCache } from "../utils/lru-cache.ts";
 
 type AnchorOption = {
   ignoreCase: boolean;
@@ -33,6 +34,93 @@ function* parseHtmlToExtractIdValues(code: string): Iterable<string> {
         yield attr.value;
       }
     }
+  }
+}
+
+const cacheMDFragments = new LRUCache<string, MDFragments>({
+  max: 10,
+  ttl: 1000 * 60,
+});
+
+class MDFragments {
+  private readonly extractedFragments: Set<string> = new Set();
+
+  private readonly fragmentsIterator: Iterator<string>;
+
+  private iteratorFinished = false;
+
+  public constructor(ast: Root) {
+    const slugger = new GithubSlugger();
+    type HeadingStack = {
+      node: Heading;
+      text: string;
+      upper: HeadingStack | null;
+    };
+    let headingStack: HeadingStack | null;
+    this.fragmentsIterator = traverse(ast, {
+      *enter(node) {
+        if (node.type === "heading") {
+          headingStack = { node, text: "", upper: headingStack };
+          return;
+        }
+        if (
+          node.type === "code" ||
+          node.type === "inlineCode" ||
+          node.type === "text"
+        ) {
+          if (headingStack) headingStack.text += node.value;
+          return;
+        }
+        if (node.type === "html") {
+          yield* parseHtmlToExtractIdValues(node.value.trim());
+        }
+      },
+      *exit(node) {
+        if (headingStack?.node === node) {
+          const match = /\{#([^\s}]+)\}\s*$/u.exec(headingStack.text);
+          const textOrId = match?.[1] ?? headingStack.text;
+          yield slugger.slug(textOrId);
+        }
+      },
+    })[Symbol.iterator]();
+  }
+
+  public hasFragment(
+    fragment: string,
+    options: { ignoreCase: boolean },
+  ): boolean {
+    const fragmentToCheck = options.ignoreCase
+      ? fragment.toLowerCase()
+      : fragment;
+
+    for (const fragmentInMd of this.extractedFragments) {
+      if (
+        (options.ignoreCase ? fragmentInMd.toLowerCase() : fragmentInMd) ===
+        fragmentToCheck
+      ) {
+        return true;
+      }
+    }
+
+    if (this.iteratorFinished) return false;
+
+    let data: IteratorResult<string>;
+    while ((data = this.fragmentsIterator.next())) {
+      if (data.done) {
+        this.iteratorFinished = true;
+        break;
+      }
+      const fragmentInMd = data.value;
+      this.extractedFragments.add(fragmentInMd);
+      if (
+        (options.ignoreCase ? fragmentInMd.toLowerCase() : fragmentInMd) ===
+        fragmentToCheck
+      ) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }
 
@@ -101,6 +189,13 @@ export default createRule<
     },
   },
   create(context) {
+    if (context.filename === context.physicalFilename) {
+      cacheMDFragments.set(
+        context.filename,
+        new MDFragments(context.sourceCode.ast),
+      );
+    }
+
     const options = context.options[0];
     const basePath = options?.basePath ?? context.cwd;
     const ignorePaths = options?.ignorePaths?.map((p) => toRegExp(p)) ?? [];
@@ -220,54 +315,20 @@ export default createRule<
       )
         return;
 
-      const code = parseMarkdown(resolved.fullPath, context.languageOptions);
-      if (!code) return;
+      let mdFragments = cacheMDFragments.get(resolved.fullPath);
+      if (!mdFragments) {
+        const ast = parseMarkdown(resolved.fullPath, context.languageOptions);
+        if (!ast) return;
+        mdFragments = new MDFragments(ast);
+        cacheMDFragments.set(resolved.fullPath, mdFragments);
+      }
 
-      const slugger = new GithubSlugger();
-      type HeadingStack = {
-        node: Heading;
-        text: string;
-        upper: HeadingStack | null;
-      };
-      let headingStack: HeadingStack | null;
-      const fragments = traverse(code.ast, {
-        *enter(node) {
-          if (node.type === "heading") {
-            headingStack = { node, text: "", upper: headingStack };
-            return;
-          }
-          if (
-            node.type === "code" ||
-            node.type === "inlineCode" ||
-            node.type === "text"
-          ) {
-            if (headingStack) headingStack.text += node.value;
-            return;
-          }
-          if (node.type === "html") {
-            yield* parseHtmlToExtractIdValues(node.value.trim());
-          }
-        },
-        *exit(node) {
-          if (headingStack?.node === node) {
-            const match = /\{#([^\s}]+)\}\s*$/u.exec(headingStack.text);
-            const textOrId = match?.[1] ?? headingStack.text;
-            yield slugger.slug(textOrId);
-          }
-        },
-      });
-
-      const fragmentToCheck = anchorOption.ignoreCase
-        ? resolved.fragment.toLowerCase()
-        : resolved.fragment;
-
-      for (const fragment of fragments) {
-        if (
-          fragmentToCheck ===
-          (anchorOption.ignoreCase ? fragment.toLowerCase() : fragment)
-        ) {
-          return;
-        }
+      if (
+        mdFragments.hasFragment(resolved.fragment, {
+          ignoreCase: anchorOption.ignoreCase,
+        })
+      ) {
+        return;
       }
 
       context.report({

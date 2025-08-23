@@ -1,4 +1,3 @@
-import type { MarkdownSourceCode } from "@eslint/markdown";
 import markdownPlugin from "@eslint/markdown";
 import { VFile } from "./vfile.ts";
 import fs from "node:fs";
@@ -6,6 +5,7 @@ import type {
   MarkdownLanguageContext,
   MarkdownLanguageOptions,
 } from "@eslint/markdown/types";
+import type { Root } from "mdast";
 const gfm = markdownPlugin.languages.gfm;
 
 /**
@@ -14,7 +14,7 @@ const gfm = markdownPlugin.languages.gfm;
 export function parseMarkdown(
   filePath: string,
   languageOptions: MarkdownLanguageOptions,
-): MarkdownSourceCode | null {
+): Root | null {
   const context: MarkdownLanguageContext = {
     languageOptions,
   };
@@ -30,5 +30,5 @@ export function parseMarkdown(
   const result = gfm.parse(vfile, context);
   if (!result.ok) return null;
 
-  return gfm.createSourceCode(vfile, result);
+  return result.ast;
 }
