@@ -2,6 +2,72 @@
 
 
 Test: no-missing-path >> invalid
+Filename: tests/fixtures/rules/no-missing-path/invalid/anchor-option/ignore-case/false/test01-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Options:
+  - anchorOption:
+      ignoreCase: false
+Plugins: unable to serialize
+
+Code:
+  1 | # Invalid: Non-existent Anchor
+  2 |
+  3 | - [missing-anchor](../../../../test-target.md#not-exist-anchor)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  4 |
+  5 | # Invalid: Existing Anchor but Different Case
+  6 |
+  7 | - [target](../../../../test-target.md#A)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [2]
+  8 | - [target](../../../../test-target.md#Custom-Id)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [3]
+  9 |
+ 10 | # Valid: Existing Anchor
+ 11 |
+ 12 | - [target](../../../../test-target.md#a)
+ 13 | - [target](../../../../test-target.md#custom-id)
+ 14 |
+
+[1] The anchor 'not-exist-anchor' is not defined in 'tests/fixtures/rules/no-missing-path/test-target.md'.
+[2] The anchor 'A' is not defined in 'tests/fixtures/rules/no-missing-path/test-target.md'.
+[3] The anchor 'Custom-Id' is not defined in 'tests/fixtures/rules/no-missing-path/test-target.md'.
+---
+
+
+Test: no-missing-path >> invalid
+Filename: tests/fixtures/rules/no-missing-path/invalid/anchor-option/ignore-case/true/test01-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Options:
+  - anchorOption:
+      ignoreCase: true
+Plugins: unable to serialize
+
+Code:
+  1 | # Invalid: Non-existent Anchor
+  2 |
+  3 | - [missing-anchor](../../../../test-target.md#not-exist-anchor)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  4 |
+  5 | # Valid: Existing Anchor
+  6 |
+  7 | - [target](../../../../test-target.md#a)
+  8 | - [target](../../../../test-target.md#custom-id)
+  9 |
+ 10 | # Valid: Existing Anchor but Different Case
+ 11 |
+ 12 | - [target](../../../../test-target.md#A)
+ 13 | - [target](../../../../test-target.md#Custom-Id)
+ 14 |
+
+[1] The anchor 'not-exist-anchor' is not defined in 'tests/fixtures/rules/no-missing-path/test-target.md'.
+---
+
+
+Test: no-missing-path >> invalid
 Filename: tests/fixtures/rules/no-missing-path/invalid/basic-input.md
 Language: markdown/gfm
 LanguageOptions:
