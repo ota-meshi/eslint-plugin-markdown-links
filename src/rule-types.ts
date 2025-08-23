@@ -18,6 +18,11 @@ export interface RuleOptions {
    * @see https://ota-meshi.github.io/eslint-plugin-markdown-links/rules/no-dead-urls.html
    */
   'markdown-links/no-dead-urls'?: Linter.RuleEntry<MarkdownLinksNoDeadUrls>
+  /**
+   * disallow missing local file paths in Markdown links and images
+   * @see https://ota-meshi.github.io/eslint-plugin-markdown-links/rules/no-missing-path.html
+   */
+  'markdown-links/no-missing-path'?: Linter.RuleEntry<MarkdownLinksNoMissingPath>
 }
 
 /* ======= Declarations ======= */
@@ -32,4 +37,18 @@ type MarkdownLinksNoDeadUrls = []|[{
   maxRedirects?: number
   maxRetries?: number
   timeout?: number
+}]
+// ----- markdown-links/no-missing-path -----
+type MarkdownLinksNoMissingPath = []|[{
+  basePath?: string
+  ignorePaths?: string[]
+  checkAnchor?: boolean
+  allowedAnchors?: {
+    [k: string]: string
+  }
+  anchorOption?: {
+    ignoreCase?: boolean
+    [k: string]: unknown | undefined
+  }
+  [k: string]: unknown | undefined
 }]

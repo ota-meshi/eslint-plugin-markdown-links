@@ -1,0 +1,275 @@
+# eslint-snapshot-rule-tester format: v1
+
+
+Test: no-missing-path >> invalid
+Filename: tests/fixtures/rules/no-missing-path/invalid/allowed-anchors/not-allowed-anchor-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Options:
+  - allowedAnchors:
+      /\/test-target.md$/iu: /^custom-anchor$/iu
+Plugins: unable to serialize
+
+Code:
+  1 | # Not Allowed Anchor Test
+  2 |
+  3 | - [custom](../../test-target.md#custom-anchor)
+  4 | - [wrong](../../test-target.md#not-allowed)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  5 |
+
+[1] The anchor 'not-allowed' is not defined in 'tests/fixtures/rules/no-missing-path/test-target.md'.
+---
+
+
+Test: no-missing-path >> invalid
+Filename: tests/fixtures/rules/no-missing-path/invalid/anchor-option/ignore-case/false/test01-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Options:
+  - anchorOption:
+      ignoreCase: false
+Plugins: unable to serialize
+
+Code:
+  1 | # Invalid: Non-existent Anchor
+  2 |
+  3 | - [missing-anchor](../../../../test-target.md#not-exist-anchor)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  4 |
+  5 | # Invalid: Existing Anchor but Different Case
+  6 |
+  7 | - [target](../../../../test-target.md#A)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [2]
+  8 | - [target](../../../../test-target.md#Custom-Id)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [3]
+  9 |
+ 10 | # Valid: Existing Anchor
+ 11 |
+ 12 | - [target](../../../../test-target.md#a)
+ 13 | - [target](../../../../test-target.md#custom-id)
+ 14 |
+
+[1] The anchor 'not-exist-anchor' is not defined in 'tests/fixtures/rules/no-missing-path/test-target.md'.
+[2] The anchor 'A' is not defined in 'tests/fixtures/rules/no-missing-path/test-target.md'.
+[3] The anchor 'Custom-Id' is not defined in 'tests/fixtures/rules/no-missing-path/test-target.md'.
+---
+
+
+Test: no-missing-path >> invalid
+Filename: tests/fixtures/rules/no-missing-path/invalid/anchor-option/ignore-case/true/test01-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Options:
+  - anchorOption:
+      ignoreCase: true
+Plugins: unable to serialize
+
+Code:
+  1 | # Invalid: Non-existent Anchor
+  2 |
+  3 | - [missing-anchor](../../../../test-target.md#not-exist-anchor)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  4 |
+  5 | # Valid: Existing Anchor
+  6 |
+  7 | - [target](../../../../test-target.md#a)
+  8 | - [target](../../../../test-target.md#custom-id)
+  9 |
+ 10 | # Valid: Existing Anchor but Different Case
+ 11 |
+ 12 | - [target](../../../../test-target.md#A)
+ 13 | - [target](../../../../test-target.md#Custom-Id)
+ 14 |
+
+[1] The anchor 'not-exist-anchor' is not defined in 'tests/fixtures/rules/no-missing-path/test-target.md'.
+---
+
+
+Test: no-missing-path >> invalid
+Filename: tests/fixtures/rules/no-missing-path/invalid/anchor-option/slugify/github/test01-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Options:
+  - anchorOption:
+      slugify: github
+Plugins: unable to serialize
+
+Code:
+  1 | # Invalid: Mdit-vue Style Slugs Won't Work With GitHub
+  2 |
+  3 | - [github](../../../../test-target.md#-Emoji)
+  4 | - [mdit-vue](../../../../test-target.md#😄-Emoji)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  5 |
+
+[1] The anchor '😄-Emoji' is not defined in 'tests/fixtures/rules/no-missing-path/test-target.md'.
+---
+
+
+Test: no-missing-path >> invalid
+Filename: tests/fixtures/rules/no-missing-path/invalid/anchor-option/slugify/mdit-vue/test01-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Options:
+  - anchorOption:
+      slugify: mdit-vue
+Plugins: unable to serialize
+
+Code:
+  1 | # Invalid: Github-style Slugs Won't Work With Mdit-vue
+  2 |
+  3 | - [github](../../../../test-target.md#-Emoji)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  4 | - [mdit-vue](../../../../test-target.md#😄-Emoji)
+  5 |
+
+[1] The anchor '-Emoji' is not defined in 'tests/fixtures/rules/no-missing-path/test-target.md'.
+---
+
+
+Test: no-missing-path >> invalid
+Filename: tests/fixtures/rules/no-missing-path/invalid/basic-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Plugins: unable to serialize
+
+Code:
+  1 | # Invalid: Non-existent Path
+  2 |
+  3 | - [notfound](notfound.md)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~ [1]
+  4 |
+  5 | # Invalid: Non-existent Path (Relative Path)
+  6 |
+  7 | - [notfound](./notfound.md)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~ [2]
+  8 |
+  9 | # Invalid: Non-existent Path (Parent Directory)
+ 10 |
+ 11 | - [notfound](../notfound.md)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~ [3]
+ 12 |
+ 13 | # Invalid: Non-existent Path (Image)
+ 14 |
+ 15 | - ![notfound](notfound.png)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~ [4]
+ 16 |
+ 17 | # Invalid: Non-existent Path With Anchor
+ 18 |
+ 19 | - [notfound](notfound.md#anchor)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [5]
+ 20 |
+ 21 | # Invalid: Non-existent Path With Anchor (Image)
+ 22 |
+ 23 | - ![notfound](notfound.md#anchor)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [6]
+ 24 |
+ 25 | # Invalid: Non-existent Anchor
+ 26 |
+ 27 | - [missing-anchor](target.md#not-exist-anchor)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [7]
+ 28 | - [missing-anchor](../test-target.md#not-exist-anchor)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [8]
+ 29 |
+ 30 | # Valid: HTML Reference Non-existent Anchor
+ 31 |
+ 32 | - [target](../test-target.html#not-exist-anchor)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [9]
+ 33 |
+ 34 | # Valid: Existing Path
+ 35 |
+ 36 | - [target](target.md)
+ 37 | - [target](./target.md)
+ 38 | - [target](../test-target.md)
+ 39 |
+ 40 | # Valid: Existing Anchor
+ 41 |
+ 42 | - [target](../test-target.md#a)
+ 43 | - [target](../test-target.md#custom-id)
+ 44 |
+ 45 | # Valid: External Link
+ 46 |
+ 47 | - [external](https://example.com)
+ 48 |
+ 49 | # Valid: Anchor Only
+ 50 |
+ 51 | - [anchor](#section)
+ 52 |
+ 53 | # Invalid: Non-existent Path (Definition)
+ 54 |
+ 55 | - [notfound]
+ 56 |
+ 57 | [notfound]: not-found.md
+    | ^~~~~~~~~~~~~~~~~~~~~~~~ [10]
+ 58 |
+
+[1] The file 'notfound.md' does not exist. Please check the path or update it to a valid file.
+[2] The file './notfound.md' does not exist. Please check the path or update it to a valid file.
+[3] The file '../notfound.md' does not exist. Please check the path or update it to a valid file.
+[4] The file 'notfound.png' does not exist. Please check the path or update it to a valid file.
+[5] The file 'notfound.md#anchor' does not exist. Please check the path or update it to a valid file.
+[6] The file 'notfound.md#anchor' does not exist. Please check the path or update it to a valid file.
+[7] The anchor 'not-exist-anchor' is not defined in 'tests/fixtures/rules/no-missing-path/invalid/target.md'.
+[8] The anchor 'not-exist-anchor' is not defined in 'tests/fixtures/rules/no-missing-path/test-target.md'.
+[9] The anchor 'not-exist-anchor' is not defined in 'tests/fixtures/rules/no-missing-path/test-target.html'.
+[10] The file 'not-found.md' does not exist. Please check the path or update it to a valid file.
+---
+
+
+Test: no-missing-path >> invalid
+Filename: tests/fixtures/rules/no-missing-path/invalid/check-anchor/anchor-disabled-invalid-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Options:
+  - checkAnchor: false
+Plugins: unable to serialize
+
+Code:
+  1 | # Anchor Test
+  2 |
+  3 | - [target](../../test-missing-target.md#missing-anchor)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  4 | - [target](../../test-target.md#missing-anchor)
+  5 |
+  6 | This is a test for checkAnchor: false.
+  7 |
+
+[1] The file '../../test-missing-target.md#missing-anchor' does not exist. Please check the path or update it to a valid file.
+---
+
+
+Test: no-missing-path >> invalid
+Filename: tests/fixtures/rules/no-missing-path/invalid/ignore-paths/basic-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Options:
+  - ignorePaths:
+      - /\.tmp$/
+      - /^build\//
+Plugins: unable to serialize
+
+Code:
+  1 | # Invalid: Non-ignored Paths
+  2 |
+  3 | These paths should cause errors because they don't match the ignorePaths patterns.
+  4 |
+  5 | ## Files That Don't Match Patterns
+  6 |
+  7 | - [regular file](nonexistent.md)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  8 | - [temp extension](nonexistent.temp)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [2]
+  9 |
+
+[1] The file 'nonexistent.md' does not exist. Please check the path or update it to a valid file.
+[2] The file 'nonexistent.temp' does not exist. Please check the path or update it to a valid file.
+---

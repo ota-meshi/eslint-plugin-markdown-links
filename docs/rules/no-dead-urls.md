@@ -48,7 +48,7 @@ This rule is heavily inspired by [remark-lint-no-dead-urls], and many of its opt
       "ignoreLocalhost": true,
       "ignoreUrls": [],
       "checkAnchor": true,
-      "anchorAllows": [["/./", "/^:~:/"]],
+      "allowedAnchors": { "/./": "/^:~:/" },
       "maxRedirects": 5,
       "maxRetries": 1,
       "timeout": 3000
@@ -59,7 +59,7 @@ This rule is heavily inspired by [remark-lint-no-dead-urls], and many of its opt
 
 - `ignoreLocalhost` (type: `boolean`, default: `true`): Ignore links to localhost/127.0.0.1/0.0.0.0/::1.
 - `ignoreUrls` (type: `string[]`, default: `[]`): List of URL patterns (string or RegExp) to ignore. When specifying a regular expression, use a string that looks like a regular expression literal, e.g., `"/\\/foo/u"`. Note that since it is a string, you need to double-escape backslashes. To avoid this, it is recommended to use `` String.raw`/\foo/u` ``.
-- `checkAnchor` (type: `boolean`, default: `true`): Also check anchor fragments (the part after #) in URLs.
+- `checkAnchor` (type: `boolean`, default: `true`): Also check anchor fragments (the part after `#`) in URLs.
 - `allowedAnchors` (type: `Record<string, string>`, default: `{ "/./u": "/^:~:/u" }`): A mapping of URL patterns to anchor fragment patterns (both as strings or regular expressions). Any anchor fragment matching the pattern for the given URL will always be considered valid, even if not present on the target page. You can also use regular expression strings for both URL and fragment.
 - `maxRedirects` (type: `integer`, default: `5`): Maximum number of redirects to follow when checking a link.
 - `maxRetries` (type: `integer`, default: `1`): Maximum number of retry attempts for each link check.
@@ -72,6 +72,10 @@ This rule is heavily inspired by [remark-lint-no-dead-urls], and many of its opt
 
 [dead-or-alive]: https://github.com/wooorm/dead-or-alive
 [remark-lint-no-dead-urls]: https://github.com/remarkjs/remark-lint-no-dead-urls
+
+## 👫 Related Rules
+
+- [markdown-links/no-missing-path](./no-missing-path.md)
 
 ## 🚀 Version
 

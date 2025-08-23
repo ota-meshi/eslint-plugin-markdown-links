@@ -90,15 +90,20 @@ The rules with the following star ⭐ are included in the configs.
 
 <!--RULES_TABLE_START-->
 
-<!-- prettier-ignore-start -->
-
 ### Markdown Link Rules
+
+<!-- eslint-disable markdown-links/no-dead-urls -- Auto generated -->
+
+<!-- prettier-ignore-start -->
 
 | Rule ID | Description | Fixable | RECOMMENDED |
 |:--------|:------------|:-------:|:-----------:|
 | [markdown-links/no-dead-urls](https://ota-meshi.github.io/eslint-plugin-markdown-links/rules/no-dead-urls.html) | disallow dead external link urls |  |  |
+| [markdown-links/no-missing-path](https://ota-meshi.github.io/eslint-plugin-markdown-links/rules/no-missing-path.html) | disallow missing local file paths in Markdown links and images |  | ⭐ |
 
 <!-- prettier-ignore-end -->
+
+<!-- eslint-enable markdown-links/no-dead-urls -- Auto generated -->
 
 <!--RULES_TABLE_END-->
 <!--RULES_SECTION_END-->
