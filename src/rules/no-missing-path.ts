@@ -2,16 +2,18 @@ import { createRule } from "../utils/index.ts";
 import type { Link, Image, Definition, Heading, Root } from "mdast";
 import fs from "node:fs";
 import path from "node:path";
-import GithubSlugger from "github-slugger";
 import { toRegExp } from "../utils/regexp.ts";
 import { allowedAnchorsToAnchorAllowlist } from "../utils/allowed-anchors-option.ts";
 import { parseMarkdown } from "../utils/markdown-parser/parser.ts";
 import { traverse } from "../utils/ast.ts";
-import { iterateAttrs, iterateTagAndText } from "../utils/html.ts";
+import { iterateAttrs, iterateHTMLTokens } from "../utils/html.ts";
 import { LRUCache } from "../utils/lru-cache.ts";
+import type { Slugify } from "../utils/slug.ts";
+import { createSlugify, type SlugifyKind } from "../utils/slug.ts";
 
 type AnchorOption = {
   ignoreCase: boolean;
+  slugify: "github" | "mdit-vue";
 };
 
 const RE_EXTERNAL_URL = /^(?:[a-z]+:|\/\/)/iu;
@@ -27,12 +29,14 @@ function isExternal(filePath: string): boolean {
 /**
  * Parse HTML to extract IDs.
  */
-function* parseHtmlToExtractIdValues(code: string): Iterable<string> {
-  for (const tarOrText of iterateTagAndText(code)) {
+function* parseHtmlToExtractIdValues(
+  code: string,
+): Iterable<RawFragmentHTMLId> {
+  for (const tarOrText of iterateHTMLTokens(code)) {
     if (tarOrText.type !== "opening-tag") continue;
     for (const attr of iterateAttrs(tarOrText.value)) {
       if (attr.name === "id" && attr.value) {
-        yield attr.value;
+        yield { type: "id", value: attr.value };
       }
     }
   }
@@ -43,69 +47,101 @@ const cacheMDFragments = new LRUCache<string, Fragments>({
   ttl: 1000 * 60,
 });
 
+type FragmentChecker = (fragment: string) => boolean;
+type CreateFragmentCheckerOption = {
+  ignoreCase: boolean;
+  slugify: SlugifyKind;
+};
 interface Fragments {
-  hasFragment(fragment: string, options: { ignoreCase: boolean }): boolean;
+  fragmentChecker(options: CreateFragmentCheckerOption): FragmentChecker;
 }
 
 const anyFragments: Fragments = {
-  hasFragment() {
-    return true;
+  fragmentChecker() {
+    return () => true;
   },
 };
 
-abstract class AbsFragments implements Fragments {
-  private readonly extractedFragments: Set<string> = new Set();
+type RawFragmentMdHeading = { type: "md-heading"; value: string };
+type RawFragmentHTMLId = { type: "id"; value: string };
 
-  private readonly fragmentsIterator: Iterator<string>;
+type RawFragment = RawFragmentMdHeading | RawFragmentHTMLId;
+
+abstract class AbsFragments implements Fragments {
+  private readonly extractedRawFragments: RawFragment[] = [];
+
+  private readonly rawFragmentsIterator: Iterator<RawFragment>;
 
   private iteratorFinished = false;
 
-  protected constructor(fragments: Iterable<string>) {
-    this.fragmentsIterator = fragments[Symbol.iterator]();
+  protected constructor(fragments: Iterable<RawFragment>) {
+    this.rawFragmentsIterator = fragments[Symbol.iterator]();
   }
 
-  public hasFragment(
-    fragment: string,
-    options: { ignoreCase: boolean },
-  ): boolean {
-    const fragmentToCheck = options.ignoreCase
-      ? fragment.toLowerCase()
-      : fragment;
+  public fragmentChecker(
+    options: CreateFragmentCheckerOption,
+  ): FragmentChecker {
+    let slugify: Slugify | null = null;
 
-    for (const fragmentInFile of this.extractedFragments) {
-      if (
-        (options.ignoreCase ? fragmentInFile.toLowerCase() : fragmentInFile) ===
-        fragmentToCheck
-      ) {
-        return true;
+    const extractedFragments = new Set<string>();
+
+    /**
+     * Convert a raw fragment to a comparable fragment string.
+     */
+    function rawFragmentToCheckFragment(rawFragment: RawFragment): string {
+      let targetFragment: string;
+      if (rawFragment.type === "md-heading") {
+        if (!slugify) {
+          slugify = createSlugify(options.slugify);
+        }
+        targetFragment = slugify(rawFragment.value);
+      } else {
+        targetFragment = rawFragment.value;
       }
+      return options.ignoreCase ? targetFragment.toLowerCase() : targetFragment;
     }
 
-    if (this.iteratorFinished) return false;
+    return (fragment: string) => {
+      const fragmentToCheck = options.ignoreCase
+        ? fragment.toLowerCase()
+        : fragment;
 
-    let data: IteratorResult<string>;
-    while ((data = this.fragmentsIterator.next())) {
-      if (data.done) {
-        this.iteratorFinished = true;
-        break;
-      }
-      const fragmentInFile = data.value;
-      this.extractedFragments.add(fragmentInFile);
-      if (
-        (options.ignoreCase ? fragmentInFile.toLowerCase() : fragmentInFile) ===
-        fragmentToCheck
-      ) {
+      if (extractedFragments.has(fragmentToCheck)) {
         return true;
       }
-    }
 
-    return false;
+      for (const rawFragment of this.extractedRawFragments) {
+        const targetFragment = rawFragmentToCheckFragment(rawFragment);
+        extractedFragments.add(targetFragment);
+        if (targetFragment === fragmentToCheck) {
+          return true;
+        }
+      }
+
+      if (this.iteratorFinished) return false;
+
+      let data: IteratorResult<RawFragment>;
+      while ((data = this.rawFragmentsIterator.next())) {
+        if (data.done) {
+          this.iteratorFinished = true;
+          break;
+        }
+        const rawFragment = data.value;
+        this.extractedRawFragments.push(rawFragment);
+        const targetFragment = rawFragmentToCheckFragment(rawFragment);
+        extractedFragments.add(targetFragment);
+        if (targetFragment === fragmentToCheck) {
+          return true;
+        }
+      }
+
+      return false;
+    };
   }
 }
 
 class MDFragments extends AbsFragments {
   public constructor(ast: Root) {
-    const slugger = new GithubSlugger();
     type HeadingStack = {
       node: Heading;
       text: string;
@@ -114,7 +150,7 @@ class MDFragments extends AbsFragments {
     let headingStack: HeadingStack | null;
     super(
       traverse(ast, {
-        *enter(node) {
+        *enter(node): Iterable<RawFragment> {
           if (node.type === "heading") {
             headingStack = { node, text: "", upper: headingStack };
             return;
@@ -131,11 +167,11 @@ class MDFragments extends AbsFragments {
             yield* parseHtmlToExtractIdValues(node.value.trim());
           }
         },
-        *exit(node) {
+        *exit(node): Iterable<RawFragment> {
           if (headingStack?.node === node) {
             const match = /\{#([^\s}]+)\}\s*$/u.exec(headingStack.text);
             const textOrId = match?.[1] ?? headingStack.text;
-            yield slugger.slug(textOrId);
+            yield { type: "md-heading", value: textOrId.trim() };
           }
         },
       }),
@@ -202,6 +238,9 @@ export default createRule<
               ignoreCase: {
                 type: "boolean",
               },
+              slugify: {
+                enum: ["github", "mdit-vue"],
+              },
             },
           },
         },
@@ -216,11 +255,12 @@ export default createRule<
     },
   },
   create(context) {
+    const filename = path.isAbsolute(context.physicalFilename)
+      ? context.physicalFilename
+      : path.resolve(context.cwd, context.physicalFilename);
+
     if (context.filename === context.physicalFilename) {
-      cacheMDFragments.set(
-        context.filename,
-        new MDFragments(context.sourceCode.ast),
-      );
+      cacheMDFragments.set(filename, new MDFragments(context.sourceCode.ast));
     }
 
     const options = context.options[0];
@@ -232,9 +272,9 @@ export default createRule<
     const checkAnchor = options?.checkAnchor ?? true;
     const anchorOption: AnchorOption = {
       ignoreCase: options?.anchorOption?.ignoreCase ?? true,
+      slugify: options?.anchorOption?.slugify ?? "github",
     };
 
-    const filename = context.physicalFilename;
     const dirname = path.dirname(filename);
 
     type LinkPathWithFragment = {
@@ -360,11 +400,9 @@ export default createRule<
         cacheMDFragments.set(resolved.fullPath, fragments);
       }
 
-      if (
-        fragments.hasFragment(resolved.fragment, {
-          ignoreCase: anchorOption.ignoreCase,
-        })
-      ) {
+      const checker = fragments.fragmentChecker(anchorOption);
+
+      if (checker(resolved.fragment)) {
         return;
       }
 

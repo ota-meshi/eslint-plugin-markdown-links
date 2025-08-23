@@ -71,6 +71,8 @@ export default async (): Promise<UserConfig<DefaultTheme.Config>> => {
                 },
               },
             ],
+            // Specify the rules directory to ensure no-missing-path works correctly
+            cwd: path.join(dirname, "../rules"),
           }),
         }) as never,
       ],

@@ -90,6 +90,50 @@ Code:
 
 
 Test: no-missing-path >> invalid
+Filename: tests/fixtures/rules/no-missing-path/invalid/anchor-option/slugify/github/test01-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Options:
+  - anchorOption:
+      slugify: github
+Plugins: unable to serialize
+
+Code:
+  1 | # Invalid: Mdit-vue Style Slugs Won't Work With GitHub
+  2 |
+  3 | - [github](../../../../test-target.md#-Emoji)
+  4 | - [mdit-vue](../../../../test-target.md#😄-Emoji)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  5 |
+
+[1] The anchor '😄-Emoji' is not defined in 'tests/fixtures/rules/no-missing-path/test-target.md'.
+---
+
+
+Test: no-missing-path >> invalid
+Filename: tests/fixtures/rules/no-missing-path/invalid/anchor-option/slugify/mdit-vue/test01-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Options:
+  - anchorOption:
+      slugify: mdit-vue
+Plugins: unable to serialize
+
+Code:
+  1 | # Invalid: Github-style Slugs Won't Work With Mdit-vue
+  2 |
+  3 | - [github](../../../../test-target.md#-Emoji)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  4 | - [mdit-vue](../../../../test-target.md#😄-Emoji)
+  5 |
+
+[1] The anchor '-Emoji' is not defined in 'tests/fixtures/rules/no-missing-path/test-target.md'.
+---
+
+
+Test: no-missing-path >> invalid
 Filename: tests/fixtures/rules/no-missing-path/invalid/basic-input.md
 Language: markdown/gfm
 LanguageOptions:

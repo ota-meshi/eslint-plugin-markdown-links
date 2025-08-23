@@ -15,7 +15,12 @@ description: "disallow missing local file paths in Markdown links and images"
 ## 📖 Rule Details
 
 This rule reports an error when a link or image path in Markdown does not exist in the file system.
-For example, `[Link](./not-found.md)` will be reported if the file does not actually exist.
+Additionally, when a link contains an anchor fragment (the part after `#`), this rule verifies that the target heading or anchor exists in the referenced file.
+
+For example:
+
+- `[Link](./not-found.md)` will be reported if the file does not actually exist.
+- `[Link](./existing-file.md#non-existent-heading)` will be reported if the file exists but the specified heading is not found.
 
 <!-- eslint-skip -->
 
@@ -25,10 +30,12 @@ For example, `[Link](./not-found.md)` will be reported if the file does not actu
 <!-- ✓ GOOD -->
 
 [markdown-links/no-dead-urls](./no-dead-urls.md)
+[Link to existing heading](./no-dead-urls.md#-rule-details)
 
 <!-- ✗ BAD -->
 
 [markdown-links/unknown-rule](./unknown-rule.md)
+[Link to non-existent heading](./no-dead-urls.md#non-existent-heading)
 ```
 
 ## 🔧 Options
@@ -56,6 +63,46 @@ For example, `[Link](./not-found.md)` will be reported if the file does not actu
 - `allowedAnchors` (type: `Record<string, string>`, default: `{ "/./u": "/^:~:/u" }`): A mapping of file path patterns to anchor fragment patterns (both as strings or regular expressions). Any anchor fragment matching the pattern for the given file path will always be considered valid, even if not present on the target page. You can also use regular expression strings for both file path and fragment.
 - `anchorOption`: Options for anchor fragment matching.
   - `ignoreCase` (type: `boolean`, default: `true`): Whether to ignore case when matching anchor fragments.
+  - `slugify` (type: `"github" | "mdit-vue"`, default: `"github"`): Specifies which logic to use for slugifying Markdown anchor fragments.
+    - `"github"`: Uses [github-slugger] for slugification. This is the same method used by GitHub.
+    - `"mdit-vue"`: Uses the slugification logic provided by [mdit-vue]. This is the same method used by VitePress and VuePress.
+
+[github-slugger]: https://www.npmjs.com/package/github-slugger
+[mdit-vue]: https://github.com/mdit-vue/mdit-vue
+
+### `anchorOption.slugify`
+
+#### Example for `{ anchorOption: { slugify: "github" } }` (Default)
+
+<!-- eslint-skip -->
+
+```md
+<!-- eslint markdown-links/no-missing-path: ["error", { anchorOption: { slugify: "github" } }] -->
+
+<!-- ✓ GOOD -->
+
+[markdown-links/no-dead-urls: Rule Details](./no-dead-urls.md#-rule-details)
+
+<!-- ✗ BAD -->
+
+[markdown-links/no-dead-urls: Rule Details](./no-dead-urls.md#📖-rule-details)
+```
+
+#### Example for `{ anchorOption: { slugify: "mdit-vue" } }`
+
+<!-- eslint-skip -->
+
+```md
+<!-- eslint markdown-links/no-missing-path: ["error", { anchorOption: { slugify: "mdit-vue" } }] -->
+
+<!-- ✓ GOOD -->
+
+[markdown-links/no-dead-urls: Rule Details](./no-dead-urls.md#📖-rule-details)
+
+<!-- ✗ BAD -->
+
+[markdown-links/no-dead-urls: Rule Details](./no-dead-urls.md#-rule-details)
+```
 
 ## 📚 Further Reading
 

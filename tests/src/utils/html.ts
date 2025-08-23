@@ -1,10 +1,10 @@
 import assert from "node:assert";
-import { iterateTagAndText, iterateAttrs } from "../../../src/utils/html.ts";
+import { iterateHTMLTokens, iterateAttrs } from "../../../src/utils/html.ts";
 
-describe("iterateTagAndText", () => {
+describe("iterateHTMLTokens", () => {
   it("should yield tags and text for simple HTML", () => {
     const html = "<p>Hello <b>world</b>!</p>";
-    const result = Array.from(iterateTagAndText(html));
+    const result = Array.from(iterateHTMLTokens(html));
     assert.deepStrictEqual(result, [
       { type: "opening-tag", tagName: "p", value: "<p>" },
       { type: "text", value: "Hello " },
@@ -18,17 +18,18 @@ describe("iterateTagAndText", () => {
 
   it("should handle comments and self-closing tags", () => {
     const html = '<img src="a.png"/> <!-- comment -->text';
-    const result = Array.from(iterateTagAndText(html));
+    const result = Array.from(iterateHTMLTokens(html));
     assert.deepStrictEqual(result, [
       { type: "opening-tag", tagName: "img", value: '<img src="a.png"/>' },
       { type: "text", value: " " },
+      { type: "comment", value: "<!-- comment -->" },
       { type: "text", value: "text" },
     ]);
   });
 
   it("should handle script and style blocks", () => {
     const html = "<style>.a{}</style><script>var a=1;</script>text";
-    const result = Array.from(iterateTagAndText(html));
+    const result = Array.from(iterateHTMLTokens(html));
     assert.deepStrictEqual(result, [
       { type: "opening-tag", tagName: "style", value: "<style>" },
       { type: "raw", value: ".a{}" },
@@ -41,12 +42,12 @@ describe("iterateTagAndText", () => {
   });
   it("should yield only text for plain text", () => {
     const html = "plain text";
-    const result = Array.from(iterateTagAndText(html));
+    const result = Array.from(iterateHTMLTokens(html));
     assert.deepStrictEqual(result, [{ type: "text", value: "plain text" }]);
   });
   it("should handle various attribute quoting styles", () => {
     const html = "<input a b=\"B\" c=123 d='D' e f=\"\" g= h='' />";
-    const result = Array.from(iterateTagAndText(html));
+    const result = Array.from(iterateHTMLTokens(html));
     assert.deepStrictEqual(result, [
       {
         type: "opening-tag",
@@ -57,7 +58,7 @@ describe("iterateTagAndText", () => {
   });
   it("should handle <br/> self-closing tag", () => {
     const html = "foo<br/>bar<br>";
-    const result = Array.from(iterateTagAndText(html));
+    const result = Array.from(iterateHTMLTokens(html));
     assert.deepStrictEqual(result, [
       { type: "text", value: "foo" },
       { type: "opening-tag", tagName: "br", value: "<br/>" },
@@ -67,7 +68,7 @@ describe("iterateTagAndText", () => {
   });
   it("should handle attribute value containing >", () => {
     const html = '<a href="foo>bar">baz</a>';
-    const result = Array.from(iterateTagAndText(html));
+    const result = Array.from(iterateHTMLTokens(html));
     assert.deepStrictEqual(result, [
       { type: "opening-tag", tagName: "a", value: '<a href="foo>bar">' },
       { type: "text", value: "baz" },
@@ -76,7 +77,7 @@ describe("iterateTagAndText", () => {
   });
   it("should handle <!-- comment --> inside <script>", () => {
     const html = "<script>var a = `<!-- comment -->`; var b = 2;</script>after";
-    const result = Array.from(iterateTagAndText(html));
+    const result = Array.from(iterateHTMLTokens(html));
     assert.deepStrictEqual(result, [
       { type: "opening-tag", tagName: "script", value: "<script>" },
       { type: "raw", value: "var a = `<!-- comment -->`; var b = 2;" },
@@ -88,7 +89,7 @@ describe("iterateTagAndText", () => {
   // --- Edge cases ---
   it("should handle tag/attr name case variations", () => {
     const html = '<DIV ID="X">text</DIV>';
-    const result = Array.from(iterateTagAndText(html));
+    const result = Array.from(iterateHTMLTokens(html));
     assert.deepStrictEqual(result, [
       { type: "opening-tag", tagName: "div", value: '<DIV ID="X">' },
       { type: "text", value: "text" },
@@ -98,7 +99,7 @@ describe("iterateTagAndText", () => {
 
   it("should handle attribute value with quotes and escapes", () => {
     const html = "<a href='foo\"bar'>baz</a>";
-    const result = Array.from(iterateTagAndText(html));
+    const result = Array.from(iterateHTMLTokens(html));
     assert.deepStrictEqual(result, [
       { type: "opening-tag", tagName: "a", value: "<a href='foo\"bar'>" },
       { type: "text", value: "baz" },
@@ -108,7 +109,7 @@ describe("iterateTagAndText", () => {
 
   it("should handle broken or unclosed tags", () => {
     const html = "<div><span>text";
-    const result = Array.from(iterateTagAndText(html));
+    const result = Array.from(iterateHTMLTokens(html));
     assert.deepStrictEqual(result, [
       { type: "opening-tag", tagName: "div", value: "<div>" },
       { type: "opening-tag", tagName: "span", value: "<span>" },
@@ -118,25 +119,28 @@ describe("iterateTagAndText", () => {
 
   it("should handle comments before/after tags", () => {
     const html = "<!--a--><b>text</b><!--b-->";
-    const result = Array.from(iterateTagAndText(html));
+    const result = Array.from(iterateHTMLTokens(html));
     assert.deepStrictEqual(result, [
+      { type: "comment", value: "<!--a-->" },
       { type: "opening-tag", tagName: "b", value: "<b>" },
       { type: "text", value: "text" },
       { type: "closing-tag", tagName: "b", value: "</b>" },
+      { type: "comment", value: "<!--b-->" },
     ]);
   });
 
   it("should handle doctype and cdata", () => {
     const html = "<!DOCTYPE html><![CDATA[foo <bar>]]>";
-    const result = Array.from(iterateTagAndText(html));
+    const result = Array.from(iterateHTMLTokens(html));
     assert.deepStrictEqual(result, [
+      { type: "doctype", value: "<!DOCTYPE html>" },
       { type: "cdata", value: "<![CDATA[foo <bar>]]>" },
     ]);
   });
 
   it("should handle empty tag and empty attribute", () => {
     const html = "<input disabled><img src>";
-    const result = Array.from(iterateTagAndText(html));
+    const result = Array.from(iterateHTMLTokens(html));
     assert.deepStrictEqual(result, [
       { type: "opening-tag", tagName: "input", value: "<input disabled>" },
       { type: "opening-tag", tagName: "img", value: "<img src>" },
@@ -145,7 +149,7 @@ describe("iterateTagAndText", () => {
 
   it("should handle attribute value with = and <,>", () => {
     const html = "<a data='1=2>3'>x</a>";
-    const result = Array.from(iterateTagAndText(html));
+    const result = Array.from(iterateHTMLTokens(html));
     assert.deepStrictEqual(result, [
       { type: "opening-tag", tagName: "a", value: "<a data='1=2>3'>" },
       { type: "text", value: "x" },
@@ -155,7 +159,7 @@ describe("iterateTagAndText", () => {
 
   it("should handle script with tag-like string", () => {
     const html = '<script>var s = "<div>";</script>';
-    const result = Array.from(iterateTagAndText(html));
+    const result = Array.from(iterateHTMLTokens(html));
     assert.deepStrictEqual(result, [
       { type: "opening-tag", tagName: "script", value: "<script>" },
       { type: "raw", value: 'var s = "<div>";' },
@@ -165,7 +169,7 @@ describe("iterateTagAndText", () => {
 
   it("should handle multi-line tag and attribute", () => {
     const html = `<a\nhref="foo"\n>bar</a>`;
-    const result = Array.from(iterateTagAndText(html));
+    const result = Array.from(iterateHTMLTokens(html));
     assert.deepStrictEqual(result, [
       { type: "opening-tag", tagName: "a", value: `<a\nhref="foo"\n>` },
       { type: "text", value: "bar" },

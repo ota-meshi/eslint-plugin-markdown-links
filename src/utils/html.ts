@@ -20,19 +20,33 @@ export type CData = {
   type: "cdata";
   value: string;
 };
+export type Comment = {
+  type: "comment";
+  value: string;
+};
+export type Doctype = {
+  type: "doctype";
+  value: string;
+};
+export type HTMLToken =
+  | OpeningTag
+  | ClosingTag
+  | Text
+  | RawText
+  | CData
+  | Comment
+  | Doctype;
 export type Attr = {
   name: string;
   value?: string;
 };
 /**
- * Iterates over the tags and text in a HTML string.
+ * Iterates over the tokens in a HTML string.
  */
-export function* iterateTagAndText(
-  code: string,
-): Iterable<OpeningTag | ClosingTag | Text | RawText | CData> {
+export function* iterateHTMLTokens(code: string): Iterable<HTMLToken> {
   let start = 0;
   const tagRe =
-    /<!--[\s\S]*?-->|<!DOCTYPE[^>]*>|<!\[CDATA\[[^\]]*\]\]>|<\/(?<closingTagName>[^\s/>]+)(?:\s[^>]+|\s*)>|<(?<openingTagName>[^\s!/>][^\s/>]*)(?:\s+[^\s/=>]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^"'][^\s/>]+))?)*\s*\/?>/gu;
+    /<!(?:--[\s\S]*?-->|DOCTYPE[^>]*>|\[CDATA\[[^\]]*\]\]>)|<\/(?<closingTagName>[^\s/>]+)(?:\s[^>]+|\s*)>|<(?<openingTagName>[^\s!/>][^\s/>]*)(?:\s+[^\s/=>]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^"'][^\s/>]+))?)*\s*\/?>/gu;
   const endScriptTagRe = /<\/script(?:\s[^>]+|\s*)>/giu;
   const endStyleTagRe = /<\/style(?:\s[^>]+|\s*)>/giu;
   let match;
@@ -50,6 +64,10 @@ export function* iterateTagAndText(
         yield { type: "closing-tag", tagName: closingTagName, value: match[0] };
       } else if (match[0].startsWith("<![CDATA[")) {
         yield { type: "cdata", value: match[0] };
+      } else if (match[0].startsWith("<!DOCTYPE")) {
+        yield { type: "doctype", value: match[0] };
+      } else {
+        yield { type: "comment", value: match[0] };
       }
       start = tagRe.lastIndex;
       continue;
