@@ -48,6 +48,7 @@ type MarkdownLinksNoMissingPath = []|[{
   }
   anchorOption?: {
     ignoreCase?: boolean
+    slugify?: ("github" | "mdit-vue")
     [k: string]: unknown | undefined
   }
   [k: string]: unknown | undefined
