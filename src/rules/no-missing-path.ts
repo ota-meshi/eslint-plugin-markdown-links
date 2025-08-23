@@ -15,6 +15,7 @@ type AnchorOption = {
 };
 
 const RE_EXTERNAL_URL = /^(?:[a-z]+:|\/\/)/iu;
+const RE_GITHUB_LINE_REFERENCE_FRAGMENT = /^L\d+(?:C\d+)?(?:-L\d+(?:C\d+)?)?$/u;
 
 /**
  * Check if a file path is external (i.e., starts with http(s):// or //).
@@ -37,52 +38,30 @@ function* parseHtmlToExtractIdValues(code: string): Iterable<string> {
   }
 }
 
-const cacheMDFragments = new LRUCache<string, MDFragments>({
+const cacheMDFragments = new LRUCache<string, Fragments>({
   max: 10,
   ttl: 1000 * 60,
 });
 
-class MDFragments {
+interface Fragments {
+  hasFragment(fragment: string, options: { ignoreCase: boolean }): boolean;
+}
+
+const anyFragments: Fragments = {
+  hasFragment() {
+    return true;
+  },
+};
+
+abstract class AbsFragments implements Fragments {
   private readonly extractedFragments: Set<string> = new Set();
 
   private readonly fragmentsIterator: Iterator<string>;
 
   private iteratorFinished = false;
 
-  public constructor(ast: Root) {
-    const slugger = new GithubSlugger();
-    type HeadingStack = {
-      node: Heading;
-      text: string;
-      upper: HeadingStack | null;
-    };
-    let headingStack: HeadingStack | null;
-    this.fragmentsIterator = traverse(ast, {
-      *enter(node) {
-        if (node.type === "heading") {
-          headingStack = { node, text: "", upper: headingStack };
-          return;
-        }
-        if (
-          node.type === "code" ||
-          node.type === "inlineCode" ||
-          node.type === "text"
-        ) {
-          if (headingStack) headingStack.text += node.value;
-          return;
-        }
-        if (node.type === "html") {
-          yield* parseHtmlToExtractIdValues(node.value.trim());
-        }
-      },
-      *exit(node) {
-        if (headingStack?.node === node) {
-          const match = /\{#([^\s}]+)\}\s*$/u.exec(headingStack.text);
-          const textOrId = match?.[1] ?? headingStack.text;
-          yield slugger.slug(textOrId);
-        }
-      },
-    })[Symbol.iterator]();
+  protected constructor(fragments: Iterable<string>) {
+    this.fragmentsIterator = fragments[Symbol.iterator]();
   }
 
   public hasFragment(
@@ -93,9 +72,9 @@ class MDFragments {
       ? fragment.toLowerCase()
       : fragment;
 
-    for (const fragmentInMd of this.extractedFragments) {
+    for (const fragmentInFile of this.extractedFragments) {
       if (
-        (options.ignoreCase ? fragmentInMd.toLowerCase() : fragmentInMd) ===
+        (options.ignoreCase ? fragmentInFile.toLowerCase() : fragmentInFile) ===
         fragmentToCheck
       ) {
         return true;
@@ -110,10 +89,10 @@ class MDFragments {
         this.iteratorFinished = true;
         break;
       }
-      const fragmentInMd = data.value;
-      this.extractedFragments.add(fragmentInMd);
+      const fragmentInFile = data.value;
+      this.extractedFragments.add(fragmentInFile);
       if (
-        (options.ignoreCase ? fragmentInMd.toLowerCase() : fragmentInMd) ===
+        (options.ignoreCase ? fragmentInFile.toLowerCase() : fragmentInFile) ===
         fragmentToCheck
       ) {
         return true;
@@ -121,6 +100,52 @@ class MDFragments {
     }
 
     return false;
+  }
+}
+
+class MDFragments extends AbsFragments {
+  public constructor(ast: Root) {
+    const slugger = new GithubSlugger();
+    type HeadingStack = {
+      node: Heading;
+      text: string;
+      upper: HeadingStack | null;
+    };
+    let headingStack: HeadingStack | null;
+    super(
+      traverse(ast, {
+        *enter(node) {
+          if (node.type === "heading") {
+            headingStack = { node, text: "", upper: headingStack };
+            return;
+          }
+          if (
+            node.type === "code" ||
+            node.type === "inlineCode" ||
+            node.type === "text"
+          ) {
+            if (headingStack) headingStack.text += node.value;
+            return;
+          }
+          if (node.type === "html") {
+            yield* parseHtmlToExtractIdValues(node.value.trim());
+          }
+        },
+        *exit(node) {
+          if (headingStack?.node === node) {
+            const match = /\{#([^\s}]+)\}\s*$/u.exec(headingStack.text);
+            const textOrId = match?.[1] ?? headingStack.text;
+            yield slugger.slug(textOrId);
+          }
+        },
+      }),
+    );
+  }
+}
+
+class HTMLFragments extends AbsFragments {
+  public constructor(html: string) {
+    super(parseHtmlToExtractIdValues(html));
   }
 }
 
@@ -186,6 +211,8 @@ export default createRule<
       missingPath:
         "The file '{{path}}' does not exist. Please check the path or update it to a valid file.",
       missingAnchor: "The anchor '{{fragment}}' is not defined in '{{path}}'.",
+      notFileButLinkHasFragment:
+        "The file '{{path}}' is not a regular file, but the link has a fragment '{{fragment}}'.",
     },
   },
   create(context) {
@@ -303,9 +330,10 @@ export default createRule<
      * Checks if the link or image node has a valid anchor.
      */
     function checkForAnchor(
-      resourceNode: Link | Image | Definition,
+      reportNode: Link | Image | Definition,
       resolved: LinkPathWithFragment,
     ) {
+      if (RE_GITHUB_LINE_REFERENCE_FRAGMENT.test(resolved.fragment)) return;
       if (
         anchorAllowlist.some(([url, anchor]) => {
           return (
@@ -315,16 +343,25 @@ export default createRule<
       )
         return;
 
-      let mdFragments = cacheMDFragments.get(resolved.fullPath);
-      if (!mdFragments) {
-        const ast = parseMarkdown(resolved.fullPath, context.languageOptions);
-        if (!ast) return;
-        mdFragments = new MDFragments(ast);
-        cacheMDFragments.set(resolved.fullPath, mdFragments);
+      let fragments: Fragments | undefined = cacheMDFragments.get(
+        resolved.fullPath,
+      );
+      if (!fragments) {
+        const stat = fs.statSync(resolved.fullPath);
+        if (!stat.isFile()) {
+          context.report({
+            node: reportNode,
+            messageId: "notFileButLinkHasFragment",
+            data: { fragment: resolved.fragment, path: resolved.relativePath },
+          });
+          return;
+        }
+        fragments = createFragments(resolved.fullPath);
+        cacheMDFragments.set(resolved.fullPath, fragments);
       }
 
       if (
-        mdFragments.hasFragment(resolved.fragment, {
+        fragments.hasFragment(resolved.fragment, {
           ignoreCase: anchorOption.ignoreCase,
         })
       ) {
@@ -332,7 +369,7 @@ export default createRule<
       }
 
       context.report({
-        node: resourceNode,
+        node: reportNode,
         messageId: "missingAnchor",
         data: { fragment: resolved.fragment, path: resolved.relativePath },
       });
@@ -343,5 +380,23 @@ export default createRule<
       image: check,
       definition: check,
     };
+
+    /**
+     * Creates a new Fragments instance for the given file.
+     */
+    function createFragments(filePath: string): Fragments {
+      const ext = path.extname(filePath).toLowerCase();
+      if (ext === ".md" || ext === ".markdown") {
+        const ast = parseMarkdown(filePath, context.languageOptions);
+        if (!ast) return anyFragments;
+        return new MDFragments(ast);
+      }
+      if (ext === ".html") {
+        // Support HTML as well, considering cases such as HTML generated by static site generators
+        return new HTMLFragments(fs.readFileSync(filePath, "utf-8"));
+      }
+
+      return anyFragments;
+    }
   },
 });

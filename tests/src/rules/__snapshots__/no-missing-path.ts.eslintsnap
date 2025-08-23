@@ -134,32 +134,37 @@ Code:
  28 | - [missing-anchor](../test-target.md#not-exist-anchor)
     |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [8]
  29 |
- 30 | # Valid: Existing Path
+ 30 | # Valid: HTML Reference Non-existent Anchor
  31 |
- 32 | - [target](target.md)
- 33 | - [target](./target.md)
- 34 | - [target](../test-target.md)
+ 32 | - [target](../test-target.html#not-exist-anchor)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [9]
+ 33 |
+ 34 | # Valid: Existing Path
  35 |
- 36 | # Valid: Existing Anchor
- 37 |
- 38 | - [target](../test-target.md#a)
- 39 | - [target](../test-target.md#custom-id)
- 40 |
- 41 | # Valid: External Link
- 42 |
- 43 | - [external](https://example.com)
+ 36 | - [target](target.md)
+ 37 | - [target](./target.md)
+ 38 | - [target](../test-target.md)
+ 39 |
+ 40 | # Valid: Existing Anchor
+ 41 |
+ 42 | - [target](../test-target.md#a)
+ 43 | - [target](../test-target.md#custom-id)
  44 |
- 45 | # Valid: Anchor Only
+ 45 | # Valid: External Link
  46 |
- 47 | - [anchor](#section)
+ 47 | - [external](https://example.com)
  48 |
- 49 | # Invalid: Non-existent Path (Definition)
+ 49 | # Valid: Anchor Only
  50 |
- 51 | - [notfound]
+ 51 | - [anchor](#section)
  52 |
- 53 | [notfound]: not-found.md
-    | ^~~~~~~~~~~~~~~~~~~~~~~~ [9]
+ 53 | # Invalid: Non-existent Path (Definition)
  54 |
+ 55 | - [notfound]
+ 56 |
+ 57 | [notfound]: not-found.md
+    | ^~~~~~~~~~~~~~~~~~~~~~~~ [10]
+ 58 |
 
 [1] The file 'notfound.md' does not exist. Please check the path or update it to a valid file.
 [2] The file './notfound.md' does not exist. Please check the path or update it to a valid file.
@@ -169,7 +174,8 @@ Code:
 [6] The file 'notfound.md#anchor' does not exist. Please check the path or update it to a valid file.
 [7] The anchor 'not-exist-anchor' is not defined in 'tests/fixtures/rules/no-missing-path/invalid/target.md'.
 [8] The anchor 'not-exist-anchor' is not defined in 'tests/fixtures/rules/no-missing-path/test-target.md'.
-[9] The file 'not-found.md' does not exist. Please check the path or update it to a valid file.
+[9] The anchor 'not-exist-anchor' is not defined in 'tests/fixtures/rules/no-missing-path/test-target.html'.
+[10] The file 'not-found.md' does not exist. Please check the path or update it to a valid file.
 ---
 
 
