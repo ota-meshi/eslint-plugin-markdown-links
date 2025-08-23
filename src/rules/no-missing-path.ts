@@ -152,6 +152,14 @@ export default createRule<
     }
 
     /**
+     * Strips the fragment from a link URL.
+     */
+    function stripFragment(linkUrl: string): string {
+      const [fileUrl] = linkUrl.split(/([#?])/u);
+      return fileUrl;
+    }
+
+    /**
      * Get the path and fragment of a link or image.
      */
     function getLinkPathAndFragment(linkUrl: string): LinkPathAndFragment {
@@ -174,7 +182,12 @@ export default createRule<
      */
     function check(node: Link | Image | Definition) {
       const url = node.url;
-      if (!url || isExternal(url) || url.startsWith("#") || isIgnore(url))
+      if (
+        !url ||
+        isExternal(url) ||
+        url.startsWith("#") ||
+        isIgnore(stripFragment(url))
+      )
         return;
       const resolved = getLinkPathAndFragment(url);
       if (isIgnore(resolved.relativePath)) return;
@@ -247,7 +260,6 @@ export default createRule<
       const fragmentToCheck = anchorOption.ignoreCase
         ? resolved.fragment.toLowerCase()
         : resolved.fragment;
-      if (fragmentToCheck === "a") debugger;
 
       for (const fragment of fragments) {
         if (

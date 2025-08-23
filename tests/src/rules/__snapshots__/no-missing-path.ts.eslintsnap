@@ -2,6 +2,28 @@
 
 
 Test: no-missing-path >> invalid
+Filename: tests/fixtures/rules/no-missing-path/invalid/allowed-anchors/not-allowed-anchor-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Options:
+  - allowedAnchors:
+      /\/test-target.md$/iu: /^custom-anchor$/iu
+Plugins: unable to serialize
+
+Code:
+  1 | # Not Allowed Anchor Test
+  2 |
+  3 | - [custom](../../test-target.md#custom-anchor)
+  4 | - [wrong](../../test-target.md#not-allowed)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  5 |
+
+[1] The anchor 'not-allowed' is not defined in 'tests/fixtures/rules/no-missing-path/test-target.md'.
+---
+
+
+Test: no-missing-path >> invalid
 Filename: tests/fixtures/rules/no-missing-path/invalid/anchor-option/ignore-case/false/test01-input.md
 Language: markdown/gfm
 LanguageOptions:
@@ -148,4 +170,56 @@ Code:
 [7] The anchor 'not-exist-anchor' is not defined in 'tests/fixtures/rules/no-missing-path/invalid/target.md'.
 [8] The anchor 'not-exist-anchor' is not defined in 'tests/fixtures/rules/no-missing-path/test-target.md'.
 [9] The file 'not-found.md' does not exist. Please check the path or update it to a valid file.
+---
+
+
+Test: no-missing-path >> invalid
+Filename: tests/fixtures/rules/no-missing-path/invalid/check-anchor/anchor-disabled-invalid-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Options:
+  - checkAnchor: false
+Plugins: unable to serialize
+
+Code:
+  1 | # Anchor Test
+  2 |
+  3 | - [target](../../test-missing-target.md#missing-anchor)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  4 | - [target](../../test-target.md#missing-anchor)
+  5 |
+  6 | This is a test for checkAnchor: false.
+  7 |
+
+[1] The file '../../test-missing-target.md#missing-anchor' does not exist. Please check the path or update it to a valid file.
+---
+
+
+Test: no-missing-path >> invalid
+Filename: tests/fixtures/rules/no-missing-path/invalid/ignore-paths/basic-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Options:
+  - ignorePaths:
+      - /\.tmp$/
+      - /^build\//
+Plugins: unable to serialize
+
+Code:
+  1 | # Invalid: Non-ignored Paths
+  2 |
+  3 | These paths should cause errors because they don't match the ignorePaths patterns.
+  4 |
+  5 | ## Files That Don't Match Patterns
+  6 |
+  7 | - [regular file](nonexistent.md)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  8 | - [temp extension](nonexistent.temp)
+    |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [2]
+  9 |
+
+[1] The file 'nonexistent.md' does not exist. Please check the path or update it to a valid file.
+[2] The file 'nonexistent.temp' does not exist. Please check the path or update it to a valid file.
 ---

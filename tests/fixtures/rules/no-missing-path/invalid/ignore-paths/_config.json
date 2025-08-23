@@ -1,0 +1,7 @@
+{
+  "options": [
+    {
+      "ignorePaths": ["/\\.tmp$/", "/^build\\//"]
+    }
+  ]
+}

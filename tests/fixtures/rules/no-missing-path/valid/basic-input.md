@@ -3,6 +3,7 @@
 - [target](target.md)
 - [target](./target.md)
 - [target](../test-target.md)
+- [target](/tests/fixtures/rules/no-missing-path/test-target.md)
 
 # Valid: Existing Anchor
 

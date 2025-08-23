@@ -1,0 +1,9 @@
+{
+  "options": [
+    {
+      "allowedAnchors": {
+        "/\\/test-target.md$/iu": "/^custom-anchor$/iu"
+      }
+    }
+  ]
+}
