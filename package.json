@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-markdown-links",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "ESLint plugin that checks links in Markdown",
   "type": "module",
   "exports": {
