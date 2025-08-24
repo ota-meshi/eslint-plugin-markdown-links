@@ -12,6 +12,8 @@
 - [target](../test-target.md#html-id)
 - [target](../test-target.md#日本語)
 - [target](../test-target.md#html)
+- [target](../test-target.md#dupe)
+- [target](../test-target.md#dupe-1)
 
 # Valid: GitHub Line Reference
 

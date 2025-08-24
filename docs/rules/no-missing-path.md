@@ -50,7 +50,8 @@ For example:
       "checkAnchor": true,
       "allowedAnchors": { "/./": "/^:~:/" },
       "anchorOption": {
-        "ignoreCase": true
+        "ignoreCase": true,
+        "slugify": "github"
       }
     }
   ]
