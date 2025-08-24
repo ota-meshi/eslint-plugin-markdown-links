@@ -117,11 +117,7 @@ export default createRule<
       if (!checkAnchor) {
         return removeFragment(url);
       }
-      try {
-        return new URL(url).href;
-      } catch {
-        return url;
-      }
+      return URL.parse(url)?.href ?? url;
     }
 
     return {
@@ -175,23 +171,15 @@ export default createRule<
  * Removes the fragment identifier from the given URL string.
  */
 function removeFragment(urlString: string): string {
-  try {
-    const url = new URL(urlString);
-    url.hash = "";
-    return url.href;
-  } catch {
-    return urlString;
-  }
+  const url = URL.parse(urlString);
+  if (!url) return urlString;
+  url.hash = "";
+  return url.href;
 }
 
 /**
  * Gets the fragment identifier from the given URL string.
  */
 function getFragment(urlString: string): string {
-  try {
-    const url = new URL(urlString);
-    return url.hash.slice(1);
-  } catch {
-    return "";
-  }
+  return URL.parse(urlString)?.hash.slice(1) || "";
 }
