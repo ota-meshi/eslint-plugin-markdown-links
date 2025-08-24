@@ -69,12 +69,8 @@ function urlToCachedFilePath(
   urlString: string,
   deadOrAliveOptions: Options,
 ): string | null {
-  let url: URL;
-  try {
-    url = new URL(urlString);
-  } catch {
-    return null;
-  }
+  const url = URL.parse(urlString);
+  if (!url) return null;
   const pathname = url.pathname.split("/").filter(Boolean).join("/");
   return path.join(
     CACHED_ROOT_PATH,
