@@ -282,7 +282,7 @@ async function handleTextHtml(
   const fragment = url.hash.slice(1);
 
   for (const id of extractIdValues(openingTags)) {
-    if (id === fragment) {
+    if (encodeURI(id) === fragment) {
       return {
         type: "success",
         url: url.href,
