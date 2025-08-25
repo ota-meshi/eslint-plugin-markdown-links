@@ -67,10 +67,8 @@ This rule is heavily inspired by [remark-lint-no-dead-urls], and many of its opt
 
 ## 📚 Further Reading
 
-- [dead-or-alive] - Library used to check if a URL is alive.
 - [remark-lint-no-dead-urls] - A similar rule for Remark, which inspired this rule's implementation.
 
-[dead-or-alive]: https://github.com/wooorm/dead-or-alive
 [remark-lint-no-dead-urls]: https://github.com/remarkjs/remark-lint-no-dead-urls
 
 ## 👫 Related Rules
