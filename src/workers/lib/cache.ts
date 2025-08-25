@@ -1,17 +1,19 @@
 import path from "node:path";
 import fs from "node:fs";
-import type { UrlStatus } from "../dead-or-alive-worker.ts";
-import type { Options } from "dead-or-alive";
+import type { Options } from "./check-url-resource-status.ts";
 import sdbm from "sdbm";
+import { version as VERSION } from "../../meta.ts";
+import type { UrlStatus } from "../check-url-resource-status-worker.ts";
 
-const TTL_FOR_ALIVE = 1000 * 60 * 60 * 24; // 1day
-const TTL_FOR_DEAD = 1000 * 60; // 1minute
+const TTL_FOR_SUCCESS = 1000 * 60 * 60 * 24; // 1day
+const TTL_FOR_ERROR = 1000 * 60; // 1minute
 
 const CACHED_ROOT_PATH = path.join(import.meta.dirname, `../.cached`);
 
 type CachedData = {
   expired?: number;
   status?: UrlStatus;
+  v?: string;
 };
 
 /**
@@ -19,19 +21,25 @@ type CachedData = {
  */
 export async function getCached(
   url: string,
-  deadOrAliveOptions: Options,
+  checkUrlsOptions: Options,
 ): Promise<UrlStatus | null> {
-  const cachedFilePath = urlToCachedFilePath(url, deadOrAliveOptions);
+  const cachedFilePath = urlToCachedFilePath(url, checkUrlsOptions);
   if (!cachedFilePath) return null;
   await fs.promises.mkdir(path.dirname(cachedFilePath), { recursive: true });
-  const data: CachedData = JSON.parse(
-    fs.existsSync(cachedFilePath)
-      ? await fs.promises.readFile(cachedFilePath, "utf-8")
-      : "{}",
-  );
+  const dataText = fs.existsSync(cachedFilePath)
+    ? await fs.promises.readFile(cachedFilePath, "utf-8")
+    : "{}";
+  let data: CachedData = {};
+  try {
+    data = JSON.parse(dataText);
+  } catch {
+    // Ignore JSON parse errors
+  }
 
   const alive = Boolean(
-    typeof data.expired === "number" && data.expired >= Date.now(),
+    typeof data.expired === "number" &&
+      data.expired >= Date.now() &&
+      data.v === VERSION,
   );
   if (!alive) {
     return null;
@@ -45,19 +53,25 @@ export async function getCached(
  */
 export async function writeCache(
   url: string,
-  deadOrAliveOptions: Options,
+  checkUrlsOptions: Options,
   status: UrlStatus,
 ): Promise<void> {
   await fs.promises.mkdir(CACHED_ROOT_PATH, { recursive: true });
-  const cachedFilePath = urlToCachedFilePath(url, deadOrAliveOptions);
+  const cachedFilePath = urlToCachedFilePath(url, checkUrlsOptions);
   if (!cachedFilePath) return;
   await fs.promises.mkdir(path.dirname(cachedFilePath), { recursive: true });
   await fs.promises.writeFile(
     cachedFilePath,
     JSON.stringify({
       expired:
-        Date.now() + (status.status === "alive" ? TTL_FOR_ALIVE : TTL_FOR_DEAD),
+        Date.now() +
+        (status.status.type === "success" ||
+        (status.status.type === "error" &&
+          status.status.error.type === "missing-anchor")
+          ? TTL_FOR_SUCCESS
+          : TTL_FOR_ERROR),
       status,
+      v: VERSION,
     }),
   );
 }
@@ -67,14 +81,14 @@ export async function writeCache(
  */
 function urlToCachedFilePath(
   urlString: string,
-  deadOrAliveOptions: Options,
+  checkUrlsOptions: Options,
 ): string | null {
   const url = URL.parse(urlString);
   if (!url) return null;
   const pathname = url.pathname.split("/").filter(Boolean).join("/");
   return path.join(
     CACHED_ROOT_PATH,
-    deadOrAliveOptions.checkAnchor
+    checkUrlsOptions.checkAnchor
       ? "check-anchor-enable"
       : "check-anchor-disable",
     url.protocol.replaceAll(":", ""),

@@ -1,22 +1,29 @@
 import { createSyncFn } from "synckit";
 import type { Link, Definition, Image } from "mdast";
 import { createRule } from "../utils/index.ts";
-import type * as doaWorker from "../workers/dead-or-alive-worker.ts";
+import type {
+  UrlStatus,
+  Params as WorkerParams,
+} from "../workers/check-url-resource-status-worker.ts";
 import { toRegExp } from "../utils/regexp.ts";
 import path from "node:path";
 import fs from "node:fs";
+import { allowedAnchorsToAnchorAllowlist } from "../utils/allowed-anchors-option.ts";
 
 const RE_IS_LOCALHOST =
   /^https?:\/\/(?:localhost|127\.0\.0\.1|0\.0\.0\.0|::1)(?::\d+)?/u;
 
 const workerPath = import.meta.filename.endsWith(".ts")
-  ? path.resolve(import.meta.dirname, "../workers/dead-or-alive-worker.ts")
-  : path.resolve(import.meta.dirname, "./dead-or-alive-worker.js");
+  ? path.resolve(
+      import.meta.dirname,
+      "../workers/check-url-resource-status-worker.ts",
+    )
+  : path.resolve(import.meta.dirname, "./check-url-resource-status-worker.js");
 if (!fs.existsSync(workerPath)) {
   throw new Error(`Worker file not found: ${workerPath}`);
 }
-const deadOrAliveUrls =
-  createSyncFn<(params: doaWorker.Params) => doaWorker.Result>(workerPath);
+const checkUrls =
+  createSyncFn<(params: WorkerParams) => UrlStatus[]>(workerPath);
 
 export default createRule<
   [
@@ -84,9 +91,15 @@ export default createRule<
     ],
     messages: {
       deadLink:
-        "The link '{{url}}' appears to be dead or unreachable. Please check the URL or update it to a working link.",
+        "The link '{{url}}' appears to be unreachable or dead. Please verify the URL or update it to a valid, working link.",
+      notOkResponseLink:
+        "The link '{{url}}' responded with status code '{{status}}'. Please check if the URL is correct and accessible.",
       missingAnchor:
-        "The anchor fragment '{{fragment}}' in '{{url}}' does not exist on the page. Please remove the fragment if unnecessary, or update it to point to an existing element.",
+        "The anchor fragment '{{fragment}}' in '{{url}}' was not found on the target page. Please update or remove the fragment as appropriate.",
+      overMaxRedirect:
+        "The link '{{url}}' exceeded the maximum number of redirects (allowed: {{maxRedirects}}, actual: {{redirects}}). Please check if the URL is correct or if there is a redirect loop.",
+      invalidUrlInSharedDeclarativeRefresh:
+        "The redirect destination '{{redirectUrl}}' (from '{{url}}') is invalid in a shared declarative refresh context. Please ensure the redirect URL is correct and accessible.",
     },
   },
   create(context) {
@@ -94,7 +107,9 @@ export default createRule<
     const options = context.options[0];
     const ignoreLocalhost = options?.ignoreLocalhost ?? true;
     const ignoreUrls = options?.ignoreUrls?.map((url) => toRegExp(url)) ?? [];
-    const allowedAnchors = options?.allowedAnchors ?? { "/./u": "/^:~:/u" };
+    const anchorAllowlist = allowedAnchorsToAnchorAllowlist(
+      options?.allowedAnchors ?? { "/./u": "/^:~:/u" },
+    );
     const checkAnchor = options?.checkAnchor ?? true;
     const maxRedirects = options?.maxRedirects ?? 5;
     const maxRetries = options?.maxRetries ?? 1;
@@ -122,33 +137,78 @@ export default createRule<
 
     return {
       "root:exit"() {
-        for (const status of deadOrAliveUrls({
+        for (const result of checkUrls({
           urls: [...links.keys()],
-          deadOrAliveOptions: {
+          checkUrlsOptions: {
             checkAnchor,
             maxRedirects,
             maxRetries,
             timeout,
-            allowedAnchors,
           },
         })) {
-          if (status?.status !== "dead") continue;
-          const nodes = links.get(status.url) ?? [];
+          if (result.status.type !== "error") continue;
+          const error = result.status.error;
+          if (error.type === "missing-anchor") {
+            const responseUrl = new URL(error.url);
+            const baseUrl = responseUrl.origin + responseUrl.pathname;
+            if (
+              anchorAllowlist.some(
+                ([urlRe, fragmentRe]) =>
+                  urlRe.test(baseUrl) && fragmentRe.test(error.fragment),
+              )
+            )
+              continue;
+          }
+          const nodes = links.get(result.url) ?? [];
           for (const node of nodes) {
-            if (status.missingAnchor) {
+            if (error.type === "fetch") {
+              context.report({
+                node,
+                messageId: "deadLink",
+                data: { url: result.url },
+              });
+            } else if (error.type === "response") {
+              context.report({
+                node,
+                messageId: "notOkResponseLink",
+                data: {
+                  url: result.url,
+                  status: String(error.status),
+                },
+              });
+            } else if (error.type === "missing-anchor") {
               context.report({
                 node,
                 messageId: "missingAnchor",
                 data: {
-                  url: removeFragment(status.url),
-                  fragment: getFragment(status.url),
+                  url: removeFragment(result.url),
+                  fragment: error.fragment,
+                },
+              });
+            } else if (error.type === "max-redirect") {
+              context.report({
+                node,
+                messageId: "overMaxRedirect",
+                data: {
+                  url: result.url,
+                  maxRedirects: String(error.maxRedirects),
+                  redirects: String(error.redirects),
+                },
+              });
+            } else if (error.type === "shared-declarative-refresh") {
+              context.report({
+                node,
+                messageId: "invalidUrlInSharedDeclarativeRefresh",
+                data: {
+                  url: result.url,
+                  redirectUrl: error.url,
                 },
               });
             } else {
               context.report({
                 node,
                 messageId: "deadLink",
-                data: { url: status.url },
+                data: { url: result.url },
               });
             }
           }
@@ -175,11 +235,4 @@ function removeFragment(urlString: string): string {
   if (!url) return urlString;
   url.hash = "";
   return url.href;
-}
-
-/**
- * Gets the fragment identifier from the given URL string.
- */
-function getFragment(urlString: string): string {
-  return URL.parse(urlString)?.hash.slice(1) || "";
 }
