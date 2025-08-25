@@ -4,6 +4,7 @@
  * <https://github.com/wooorm/dead-or-alive/blob/main/license>
  */
 import { parse as contentTypeParse } from "fast-content-type-parse";
+import { ProxyAgent } from "undici";
 import type { OpeningTag } from "../../utils/html.ts";
 import { iterateAttrs, iterateHTMLTokens } from "../../utils/html.ts";
 import { sharedDeclarativeRefresh } from "./shared-declarative-refresh.ts";
@@ -113,6 +114,7 @@ async function checkUrlResourceStatusInternal(
       controller.abort();
     }, options.timeout);
 
+    const agent = autoProxyAgent();
     response = await fetch(url, {
       headers: {
         accept:
@@ -121,6 +123,7 @@ async function checkUrlResourceStatusInternal(
       method: "GET",
       redirect: "manual",
       signal: controller.signal,
+      ...(agent ? { dispatcher: agent } : {}),
     });
 
     clearTimeout(timeoutTimeoutId);
@@ -310,4 +313,43 @@ function* extractIdValues(openingTags: OpeningTag[]): Iterable<string> {
       }
     }
   }
+}
+
+/**
+ * Create a proxy agent.
+ */
+function autoProxyAgent() {
+  const PROXY_ENV = [
+    "https_proxy",
+    "HTTPS_PROXY",
+    "http_proxy",
+    "HTTP_PROXY",
+    "npm_config_https_proxy",
+    "npm_config_http_proxy",
+  ];
+
+  const proxyStr = PROXY_ENV.map(
+    // eslint-disable-next-line no-process-env -- ok
+    (k) => process.env[k],
+  ).find(Boolean);
+  if (!proxyStr) {
+    return null;
+  }
+  const proxyUrl = new URL(proxyStr);
+
+  const encoder = new TextEncoder();
+  const encoded = encoder.encode(
+    `${proxyUrl.username}:${decodeURIComponent(proxyUrl.password)}`,
+  );
+  let binary = "";
+  for (let i = 0; i < encoded.length; i++) {
+    binary += String.fromCharCode(encoded[i]);
+  }
+  return new ProxyAgent({
+    uri: proxyUrl.protocol + proxyUrl.host,
+    token:
+      proxyUrl.username || proxyUrl.password
+        ? `Basic ${btoa(binary)}`
+        : undefined,
+  });
 }
