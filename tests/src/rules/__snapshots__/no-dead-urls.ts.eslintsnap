@@ -23,9 +23,9 @@ Code:
     | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [3]
  10 |
 
-[1] The link 'https://this-domain-does-not-exist-12345.com/' appears to be dead or unreachable. Please check the URL or update it to a working link.
-[2] The link 'https://invalid-url-that-returns-404.example/' appears to be dead or unreachable. Please check the URL or update it to a working link.
-[3] The link 'https://non-existent-domain-for-testing.xyz/' appears to be dead or unreachable. Please check the URL or update it to a working link.
+[1] The link 'https://this-domain-does-not-exist-12345.com/' appears to be unreachable or dead. Please verify the URL or update it to a valid, working link.
+[2] The link 'https://invalid-url-that-returns-404.example/' appears to be unreachable or dead. Please verify the URL or update it to a valid, working link.
+[3] The link 'https://non-existent-domain-for-testing.xyz/' appears to be unreachable or dead. Please verify the URL or update it to a valid, working link.
 ---
 
 
@@ -49,7 +49,7 @@ Code:
   5 | [no-anchor](https://eslint-online-playground.netlify.app/)
   6 |
 
-[1] The anchor fragment 'definitely-not-exist' in 'https://github.com/ota-meshi/eslint-plugin-markdown-links' does not exist on the page. Please remove the fragment if unnecessary, or update it to point to an existing element.
+[1] The anchor fragment 'definitely-not-exist' in 'https://github.com/ota-meshi/eslint-plugin-markdown-links' was not found on the target page. Please update or remove the fragment as appropriate.
 ---
 
 
@@ -71,7 +71,7 @@ Code:
   5 | [no-anchor](https://ota-meshi.github.io/eslint-plugin-markdown-preferences)
   6 |
 
-[1] The anchor fragment 'not-exist-anchor' in 'https://ota-meshi.github.io/eslint-plugin-markdown-preferences/' does not exist on the page. Please remove the fragment if unnecessary, or update it to point to an existing element.
+[1] The anchor fragment 'not-exist-anchor' in 'https://ota-meshi.github.io/eslint-plugin-markdown-preferences/' was not found on the target page. Please update or remove the fragment as appropriate.
 ---
 
 
@@ -95,9 +95,9 @@ Code:
     | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [3]
   6 |
 
-[1] The link 'http://localhost:1234/dead' appears to be dead or unreachable. Please check the URL or update it to a working link.
-[2] The link 'http://127.0.0.1:8080/dead' appears to be dead or unreachable. Please check the URL or update it to a working link.
-[3] The link 'http://example.com/dead' appears to be dead or unreachable. Please check the URL or update it to a working link.
+[1] The link 'http://localhost:1234/dead' appears to be unreachable or dead. Please verify the URL or update it to a valid, working link.
+[2] The link 'http://127.0.0.1:8080/dead' appears to be unreachable or dead. Please verify the URL or update it to a valid, working link.
+[3] The link 'http://example.com/dead' responded with status code '404'. Please check if the URL is correct and accessible.
 ---
 
 
@@ -119,7 +119,7 @@ Code:
     | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
   5 |
 
-[1] The link 'http://example.com/dead' appears to be dead or unreachable. Please check the URL or update it to a working link.
+[1] The link 'http://example.com/dead' responded with status code '404'. Please check if the URL is correct and accessible.
 ---
 
 
@@ -139,5 +139,5 @@ Code:
     | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
   4 |
 
-[1] The link 'http://10.255.255.1/dead' appears to be dead or unreachable. Please check the URL or update it to a working link.
+[1] The link 'http://10.255.255.1/dead' appears to be unreachable or dead. Please verify the URL or update it to a valid, working link.
 ---

@@ -91,9 +91,15 @@ export default createRule<
     ],
     messages: {
       deadLink:
-        "The link '{{url}}' appears to be dead or unreachable. Please check the URL or update it to a working link.",
+        "The link '{{url}}' appears to be unreachable or dead. Please verify the URL or update it to a valid, working link.",
+      notOkResponseLink:
+        "The link '{{url}}' responded with status code '{{status}}'. Please check if the URL is correct and accessible.",
       missingAnchor:
-        "The anchor fragment '{{fragment}}' in '{{url}}' does not exist on the page. Please remove the fragment if unnecessary, or update it to point to an existing element.",
+        "The anchor fragment '{{fragment}}' in '{{url}}' was not found on the target page. Please update or remove the fragment as appropriate.",
+      overMaxRedirect:
+        "The link '{{url}}' exceeded the maximum number of redirects (allowed: {{maxRedirects}}, actual: {{redirects}}). Please check if the URL is correct or if there is a redirect loop.",
+      invalidUrlInSharedDeclarativeRefresh:
+        "The redirect destination '{{redirectUrl}}' (from '{{url}}') is invalid in a shared declarative refresh context. Please ensure the redirect URL is correct and accessible.",
     },
   },
   create(context) {
@@ -155,13 +161,47 @@ export default createRule<
           }
           const nodes = links.get(result.url) ?? [];
           for (const node of nodes) {
-            if (error.type === "missing-anchor") {
+            if (error.type === "fetch") {
+              context.report({
+                node,
+                messageId: "deadLink",
+                data: { url: result.url },
+              });
+            } else if (error.type === "response") {
+              context.report({
+                node,
+                messageId: "notOkResponseLink",
+                data: {
+                  url: result.url,
+                  status: String(error.status),
+                },
+              });
+            } else if (error.type === "missing-anchor") {
               context.report({
                 node,
                 messageId: "missingAnchor",
                 data: {
-                  url: error.url,
+                  url: removeFragment(result.url),
                   fragment: error.fragment,
+                },
+              });
+            } else if (error.type === "max-redirect") {
+              context.report({
+                node,
+                messageId: "overMaxRedirect",
+                data: {
+                  url: result.url,
+                  maxRedirects: String(error.maxRedirects),
+                  redirects: String(error.redirects),
+                },
+              });
+            } else if (error.type === "shared-declarative-refresh") {
+              context.report({
+                node,
+                messageId: "invalidUrlInSharedDeclarativeRefresh",
+                data: {
+                  url: result.url,
+                  redirectUrl: error.url,
                 },
               });
             } else {
