@@ -7,7 +7,8 @@ export default defineConfig([
     outDir: "lib",
     entry: {
       index: "src/index.ts",
-      "dead-or-alive-worker": "src/workers/dead-or-alive-worker.ts",
+      "check-url-resource-status-worker":
+        "src/workers/check-url-resource-status-worker.ts",
     },
     format: ["esm"],
     treeshake: true,
