@@ -1,5 +1,13 @@
 # eslint-plugin-markdown-links
 
+## 0.3.0
+
+### Minor Changes
+
+- [#10](https://github.com/ota-meshi/eslint-plugin-markdown-links/pull/10) [`85a55db`](https://github.com/ota-meshi/eslint-plugin-markdown-links/commit/85a55dbc8d21d4e6c5a8147733743322f8bf11b2) Thanks [@ota-meshi](https://github.com/ota-meshi)! - refactor: use URL.parse
+
+- [#12](https://github.com/ota-meshi/eslint-plugin-markdown-links/pull/12) [`3ef09da`](https://github.com/ota-meshi/eslint-plugin-markdown-links/commit/3ef09daa99958e347f616c98be56a58d43f94004) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: use `fetch` function instead of `dead-or-alive`
+
 ## 0.2.1
 
 ### Patch Changes
