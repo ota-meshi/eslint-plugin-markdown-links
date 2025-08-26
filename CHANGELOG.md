@@ -1,5 +1,11 @@
 # eslint-plugin-markdown-links
 
+## 0.3.1
+
+### Patch Changes
+
+- [#13](https://github.com/ota-meshi/eslint-plugin-markdown-links/pull/13) [`74d005f`](https://github.com/ota-meshi/eslint-plugin-markdown-links/commit/74d005fa53cb2e307db321107879d5d30463e2f7) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: pass environment variables to workers.
+
 ## 0.3.0
 
 ### Minor Changes
