@@ -14,6 +14,7 @@ export type Options = {
   maxRedirects: number;
   maxRetries: number;
   timeout: number;
+  NODE_TLS_REJECT_UNAUTHORIZED?: string;
 };
 type States = {
   messages: never[];
@@ -115,6 +116,9 @@ async function checkUrlResourceStatusInternal(
     }, options.timeout);
 
     const agent = autoProxyAgent();
+    // eslint-disable-next-line no-process-env -- Apply environment variables.
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED =
+      options.NODE_TLS_REJECT_UNAUTHORIZED;
     response = await fetch(url, {
       headers: {
         accept:

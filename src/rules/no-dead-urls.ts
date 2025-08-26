@@ -144,6 +144,9 @@ export default createRule<
             maxRedirects,
             maxRetries,
             timeout,
+            NODE_TLS_REJECT_UNAUTHORIZED:
+              // eslint-disable-next-line no-process-env -- Pass environment variables to workers.
+              process.env.NODE_TLS_REJECT_UNAUTHORIZED,
           },
         })) {
           if (result.status.type !== "error") continue;
