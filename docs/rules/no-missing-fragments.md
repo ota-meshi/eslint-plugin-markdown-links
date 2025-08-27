@@ -3,13 +3,12 @@ pageClass: "rule-details"
 sidebarDepth: 0
 title: "markdown-links/no-missing-fragments"
 description: "disallow missing fragment identifiers in same-file Markdown links"
+since: "v0.4.0"
 ---
 
 # markdown-links/no-missing-fragments
 
 > disallow missing fragment identifiers in same-file Markdown links
-
-- ❗ <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
 
 ## 📖 Rule Details
 
@@ -82,12 +81,12 @@ This rule serves a similar purpose to ESLint's official [markdown/no-missing-lin
 [@eslint/markdown]: https://www.npmjs.com/package/@eslint/markdown
 [markdown/no-missing-link-fragments]: https://github.com/eslint/markdown/blob/main/docs/rules/no-missing-link-fragments.md
 
-## 🔍 Implementation
+## 🚀 Version
 
-<!-- eslint-disable markdown-links/no-dead-urls -- Auto generated -->
+This rule was introduced in eslint-plugin-markdown-links v0.4.0
+
+## 🔍 Implementation
 
 - [Rule source](https://github.com/ota-meshi/eslint-plugin-markdown-links/blob/main/src/rules/no-missing-fragments.ts)
 - [Test source](https://github.com/ota-meshi/eslint-plugin-markdown-links/blob/main/tests/src/rules/no-missing-fragments.ts)
 - [Test fixture sources](https://github.com/ota-meshi/eslint-plugin-markdown-links/tree/main/tests/fixtures/rules/no-missing-fragments)
-
-<!-- eslint-enable markdown-links/no-dead-urls -- Auto generated -->
