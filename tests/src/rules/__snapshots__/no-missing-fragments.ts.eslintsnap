@@ -1,0 +1,111 @@
+# eslint-snapshot-rule-tester format: v1
+
+
+Test: no-missing-fragments >> invalid
+Filename: tests/fixtures/rules/no-missing-fragments/invalid/case-sensitive-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Options:
+  - ignoreCase: false
+Plugins: unable to serialize
+
+Code:
+  1 | # Case Sensitive Test
+  2 |
+  3 | This document tests case sensitivity with ignoreCase: false.
+  4 |
+  5 | ## Section One
+  6 |
+  7 | Link to [section one](#section-one) should work.
+  8 |
+  9 | Link to [Section One](#Section-One) should fail.
+    |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+ 10 |
+ 11 | Link to [SECTION ONE](#SECTION-ONE) should fail.
+    |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~ [2]
+ 12 |
+
+[1] The fragment 'Section-One' is not defined in this file.
+[2] The fragment 'SECTION-ONE' is not defined in this file.
+---
+
+
+Test: no-missing-fragments >> invalid
+Filename: tests/fixtures/rules/no-missing-fragments/invalid/missing-fragments-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Plugins: unable to serialize
+
+Code:
+  1 | # Invalid Fragment References
+  2 |
+  3 | This document tests invalid fragment references.
+  4 |
+  5 | ## Section One
+  6 |
+  7 | This is an invalid reference to [non-existent section](#non-existent-section).
+    |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  8 |
+  9 | ## Section Two
+ 10 |
+ 11 | Another invalid reference to [missing fragment](#missing-fragment).
+    |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [2]
+ 12 |
+ 13 | Also invalid: [wrong name](#wrong-name).
+    |               ^~~~~~~~~~~~~~~~~~~~~~~~~ [3]
+ 14 |
+
+[1] The fragment 'non-existent-section' is not defined in this file.
+[2] The fragment 'missing-fragment' is not defined in this file.
+[3] The fragment 'wrong-name' is not defined in this file.
+---
+
+
+Test: no-missing-fragments >> invalid
+Filename: tests/fixtures/rules/no-missing-fragments/invalid/slugify-github-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Options:
+  - slugify: github
+Plugins: unable to serialize
+
+Code:
+  1 | # Invalid Slugify GitHub Test
+  2 |
+  3 | This document tests invalid fragment references when using GitHub slugify but linking with mdit-vue style.
+  4 |
+  5 | ## 😄 Emoji Heading
+  6 |
+  7 | Link to [emoji heading](#😄-emoji-heading) should fail with GitHub slugify (correct is #-emoji-heading).
+    |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  8 |
+
+[1] The fragment '😄-emoji-heading' is not defined in this file.
+---
+
+
+Test: no-missing-fragments >> invalid
+Filename: tests/fixtures/rules/no-missing-fragments/invalid/slugify-mdit-vue-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Options:
+  - slugify: mdit-vue
+Plugins: unable to serialize
+
+Code:
+  1 | # Invalid Slugify Mdit-vue Test
+  2 |
+  3 | This document tests invalid fragment references when using mdit-vue slugify but linking with GitHub style.
+  4 |
+  5 | ## 😄 Emoji Heading
+  6 |
+  7 | Link to [emoji heading](#-emoji-heading) should fail with mdit-vue slugify (correct is #😄-emoji-heading).
+    |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  8 |
+
+[1] The fragment '-emoji-heading' is not defined in this file.
+---

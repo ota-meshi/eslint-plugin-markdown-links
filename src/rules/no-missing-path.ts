@@ -172,6 +172,7 @@ class MDFragments extends AbsFragments {
             const match = /\{#([^\s}]+)\}\s*$/u.exec(headingStack.text);
             const textOrId = match?.[1] ?? headingStack.text;
             yield { type: "md-heading", value: textOrId.trim() };
+            headingStack = headingStack.upper;
           }
         },
       }),
