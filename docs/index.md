@@ -32,6 +32,10 @@ See [User Guide](./user-guide/index.md).
 
 See [Available Rules](./rules/index.md).
 
+## 👫 Related Packages
+
+- [eslint-plugin-markdown-preferences](https://github.com/ota-meshi/eslint-plugin-markdown-preferences) ... ESLint plugin that enforces our markdown preferences.
+
 <!--DOCS_IGNORE_START-->
 
 ## 🍻 Contributing

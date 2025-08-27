@@ -85,7 +85,7 @@ Is not supported.
 
 <!--RULES_SECTION_START-->
 
-The `--fix` option on the [command line](https://eslint.org/docs/user-guide/command-line-interface#fixing-problems) automatically fixes problems reported by rules which have a wrench 🔧 below.\
+The `--fix` option on the [command line](https://eslint.org/docs/latest/use/command-line-interface#fix-problems) automatically fixes problems reported by rules which have a wrench 🔧 below.\
 The rules with the following star ⭐ are included in the configs.
 
 <!--RULES_TABLE_START-->
@@ -103,6 +103,11 @@ The rules with the following star ⭐ are included in the configs.
 
 <!--RULES_TABLE_END-->
 <!--RULES_SECTION_END-->
+
+## 👫 Related Packages
+
+- [eslint-plugin-markdown-preferences](https://github.com/ota-meshi/eslint-plugin-markdown-preferences) ... ESLint plugin that enforces our markdown preferences.
+
 <!--DOCS_IGNORE_START-->
 
 ## 🍻 Contributing
