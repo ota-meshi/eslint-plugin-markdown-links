@@ -1,5 +1,11 @@
 # eslint-plugin-markdown-links
 
+## 0.4.0
+
+### Minor Changes
+
+- [#15](https://github.com/ota-meshi/eslint-plugin-markdown-links/pull/15) [`8f736d0`](https://github.com/ota-meshi/eslint-plugin-markdown-links/commit/8f736d0589e91cbe60b84ed35662c8e30588d484) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add [`markdown-links/no-missing-fragments`](https://ota-meshi.github.io/eslint-plugin-markdown-links/rules/no-missing-fragments.html) rule
+
 ## 0.3.1
 
 ### Patch Changes
