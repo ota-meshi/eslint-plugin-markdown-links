@@ -10,7 +10,6 @@ description: "disallow missing fragment identifiers in same-file Markdown links"
 > disallow missing fragment identifiers in same-file Markdown links
 
 - ❗ <badge text="This rule has not been released yet." vertical="middle" type="error"> **_This rule has not been released yet._** </badge>
-- ⚙️ This rule is included in `plugin.configs.recommended`.
 
 ## 📖 Rule Details
 

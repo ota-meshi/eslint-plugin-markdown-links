@@ -16,7 +16,7 @@ The rules with the following star ⭐ are included in the `plugin.configs.recomm
 | Rule ID | Description | Fixable | RECOMMENDED |
 |:--------|:------------|:-------:|:-----------:|
 | [markdown-links/no-dead-urls](./no-dead-urls.md) | disallow dead external link urls |  |  |
-| [markdown-links/no-missing-fragments](./no-missing-fragments.md) | disallow missing fragment identifiers in same-file Markdown links |  | ⭐ |
+| [markdown-links/no-missing-fragments](./no-missing-fragments.md) | disallow missing fragment identifiers in same-file Markdown links |  |  |
 | [markdown-links/no-missing-path](./no-missing-path.md) | disallow missing local file paths in Markdown links and images |  | ⭐ |
 
 <!-- prettier-ignore-end -->
