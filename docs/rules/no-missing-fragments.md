@@ -77,7 +77,7 @@ This rule serves a similar purpose to ESLint's official [markdown/no-missing-lin
 
 ## 👫 Related Rules
 
-- [markdown/no-missing-link-fragments] - Similar rule from [@eslint/markdown][@eslint/markdown] plugin
+- [markdown/no-missing-link-fragments]
 - [markdown-links/no-missing-path](./no-missing-path.md)
 
 [@eslint/markdown]: https://www.npmjs.com/package/@eslint/markdown
