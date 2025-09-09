@@ -50,7 +50,12 @@ export default createRule("no-self-destination", {
             }
             
             // Check if the target path matches the current file
-            return targetPath === basename;
+            // Handle both with and without extension
+            const baseWithoutExt = path.parse(basename).name;
+            const targetWithoutExt = path.parse(targetPath).name;
+            
+            return targetPath === basename || 
+                   (targetWithoutExt === baseWithoutExt && targetPath.indexOf('.') === -1);
         }
         
         /**

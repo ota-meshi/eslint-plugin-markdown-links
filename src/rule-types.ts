@@ -28,6 +28,11 @@ export interface RuleOptions {
    * @see https://ota-meshi.github.io/eslint-plugin-markdown-links/rules/no-missing-path.html
    */
   'markdown-links/no-missing-path'?: Linter.RuleEntry<MarkdownLinksNoMissingPath>
+  /**
+   * disallow redundant self-destination links
+   * @see https://ota-meshi.github.io/eslint-plugin-markdown-links/rules/no-self-destination.html
+   */
+  'markdown-links/no-self-destination'?: Linter.RuleEntry<MarkdownLinksNoSelfDestination>
 }
 
 /* ======= Declarations ======= */
@@ -64,3 +69,5 @@ type MarkdownLinksNoMissingPath = []|[{
   }
   [k: string]: unknown | undefined
 }]
+// ----- markdown-links/no-self-destination -----
+type MarkdownLinksNoSelfDestination = []

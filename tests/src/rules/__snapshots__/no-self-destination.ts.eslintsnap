@@ -39,3 +39,36 @@ Code:
 [4] Redundant self-destination link './basic-input.md#image'. Use '#image' instead.
 [5] Redundant self-destination link './basic-input.md#ref'. Use '#ref' instead.
 ---
+
+
+Test: no-self-destination >> invalid
+Filename: tests/fixtures/rules/no-self-destination/invalid/edge-cases-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Plugins: unable to serialize
+
+Code:
+  1 | # Edge Cases
+  2 |
+  3 | <!-- ✗ BAD: Self-destination with query -->
+  4 | [link](./edge-cases-input.md?query=value)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  5 |
+  6 | <!-- ✗ BAD: Self-destination with query and fragment -->
+  7 | [link](./edge-cases-input.md?query=value#fragment)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [2]
+  8 |
+  9 | <!-- ✗ BAD: Self-destination without extension -->
+ 10 | [link](edge-cases-input)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~ [3]
+ 11 |
+ 12 | <!-- ✗ BAD: Self-destination with encoding -->
+ 13 | [link](./edge-cases-input.md#some%20fragment)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [4]
+
+[1] Redundant self-destination link './edge-cases-input.md?query=value'. Use '?query=value' instead.
+[2] Redundant self-destination link './edge-cases-input.md?query=value#fragment'. Use '#fragment' instead.
+[3] Redundant self-destination link 'edge-cases-input'. Use '#' instead.
+[4] Redundant self-destination link './edge-cases-input.md#some%20fragment'. Use '#some%20fragment' instead.
+---
