@@ -48,14 +48,9 @@ export default createRule("no-self-destination", {
                 // Resolve the relative path to check if it points to the current file
                 const currentDir = path.dirname(filename);
                 const resolvedPath = path.resolve(currentDir, targetPath);
-                const resolvedBasename = path.basename(resolvedPath);
                 
-                // Check if resolved path points to the current file
-                const baseWithoutExt = path.parse(basename).name;
-                const resolvedWithoutExt = path.parse(resolvedBasename).name;
-                
-                return resolvedBasename === basename || 
-                       (resolvedWithoutExt === baseWithoutExt && resolvedBasename.indexOf('.') === -1);
+                // Check if resolved path is exactly the current file
+                return resolvedPath === filename;
             }
             
             // Check if the target path matches the current file

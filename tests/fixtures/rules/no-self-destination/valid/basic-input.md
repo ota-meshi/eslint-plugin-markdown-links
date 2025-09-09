@@ -12,6 +12,10 @@
 [external](https://example.com)
 [external](http://example.com/path#fragment)
 
+<!-- ✓ GOOD: Other protocols -->
+[mailto](mailto:test@example.com)
+[ftp](ftp://example.com/file.txt)
+
 <!-- ✓ GOOD: Protocol-relative -->
 [external](//example.com)
 
