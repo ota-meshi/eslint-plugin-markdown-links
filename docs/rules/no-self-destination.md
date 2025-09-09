@@ -1,10 +1,10 @@
-#  (markdown-links/no-self-destination)
+#  no-self-destination (markdown-links/no-self-destination)
 
-> description
+> disallow redundant self-destination links
 
 ## 📖 Rule Details
 
-This rule reports ???.
+This rule reports redundant self-destination links. When a file links to itself using its own filename, a simple fragment should be used instead.
 
 <!-- eslint-skip -->
 
@@ -12,36 +12,23 @@ This rule reports ???.
 <!-- eslint markdown-links/no-self-destination: 'error' -->
 
 <!-- ✓ GOOD -->
-
+[link](#fragment)
+[link](./other.md#fragment)
 
 <!-- ✗ BAD -->
-
+[link](./self.md#fragment)
+[link](self.md#fragment)
 ```
 
 ## 🔧 Options
 
 This rule has no options.
 
-<!-- or -->
-
-```json
-{
-  "markdown-links/no-self-destination": [
-    "error",
-    {}
-  ]
-}
-```
-
-- 
-
 ## 📚 Further Reading
 
-- 
+- [Markdown Link Best Practices](https://www.markdownguide.org/basic-syntax/#links)
 
 ## 👫 Related Rules
 
-- [xxx]
-
-[xxx]: https://xxx
+- [no-missing-path](./no-missing-path.md)
 

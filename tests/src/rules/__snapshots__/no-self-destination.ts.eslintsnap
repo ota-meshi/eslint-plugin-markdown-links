@@ -1,0 +1,41 @@
+# eslint-snapshot-rule-tester format: v1
+
+
+Test: no-self-destination >> invalid
+Filename: tests/fixtures/rules/no-self-destination/invalid/basic-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Plugins: unable to serialize
+
+Code:
+  1 | # Self-destination Links
+  2 |
+  3 | <!-- ✗ BAD: Self-destination with fragment -->
+  4 | [link](./basic-input.md#fragment)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  5 |
+  6 | <!-- ✗ BAD: Self-destination without leading ./ -->
+  7 | [link](basic-input.md#fragment)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [2]
+  8 |
+  9 | <!-- ✗ BAD: Self-destination without fragment -->
+ 10 | [link](./basic-input.md)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~ [3]
+ 11 |
+ 12 | <!-- ✗ BAD: Self-destination image -->
+ 13 | ![image](./basic-input.md#image)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [4]
+ 14 |
+ 15 | <!-- ✗ BAD: Self-destination in definition -->
+ 16 | [ref]
+ 17 |
+ 18 | [ref]: ./basic-input.md#ref
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~ [5]
+
+[1] Redundant self-destination link './basic-input.md#fragment'. Use '#fragment' instead.
+[2] Redundant self-destination link 'basic-input.md#fragment'. Use '#fragment' instead.
+[3] Redundant self-destination link './basic-input.md'. Use '#' instead.
+[4] Redundant self-destination link './basic-input.md#image'. Use '#image' instead.
+[5] Redundant self-destination link './basic-input.md#ref'. Use '#ref' instead.
+---
