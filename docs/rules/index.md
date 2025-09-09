@@ -11,6 +11,8 @@ The rules with the following star ⭐ are included in the `plugin.configs.recomm
 
 ## Markdown Link Rules
 
+<!-- eslint-disable markdown-links/no-dead-urls -- Auto generated -->
+
 <!-- prettier-ignore-start -->
 
 | Rule ID | Description | Fixable | RECOMMENDED |
@@ -18,5 +20,8 @@ The rules with the following star ⭐ are included in the `plugin.configs.recomm
 | [markdown-links/no-dead-urls](./no-dead-urls.md) | disallow dead external link urls |  |  |
 | [markdown-links/no-missing-fragments](./no-missing-fragments.md) | disallow missing fragment identifiers in same-file Markdown links |  |  |
 | [markdown-links/no-missing-path](./no-missing-path.md) | disallow missing local file paths in Markdown links and images |  | ⭐ |
+| [markdown-links/no-self-destination](./no-self-destination.md) | disallow redundant self-destination links |  | ⭐ |
 
 <!-- prettier-ignore-end -->
+
+<!-- eslint-enable markdown-links/no-dead-urls -- Auto generated -->

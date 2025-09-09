@@ -1,6 +1,8 @@
-// IMPORTANT!
-// This file has been automatically generated,
-// in order to update its content execute "npm run update"
+/*
+ * IMPORTANT!
+ * This file has been automatically generated,
+ * in order to update its content execute "npm run update"
+ */
 import type { ESLint, Linter } from "eslint";
 import plugin from "../index.ts";
 import markdown from "@eslint/markdown";
@@ -20,5 +22,5 @@ export const plugins = {
 export const rules: Linter.RulesRecord = {
   // eslint-plugin-markdown-links rules
   "markdown-links/no-missing-path": "error",
-  "markdown-links/no-self-destination": "error",
+"markdown-links/no-self-destination": "error"
 };
