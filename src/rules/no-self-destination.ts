@@ -27,13 +27,13 @@ export default createRule("no-self-destination", {
          * Checks if a URL refers to the current file
          */
         function isSelfDestination(url: string): boolean {
-            // Skip external URLs, fragments only, and empty URLs
-            if (!url || url.startsWith('http://') || url.startsWith('https://') || url.startsWith('#') || url.startsWith('//')) {
+            // Skip external URLs, protocols, fragments only, and empty URLs
+            if (!url || /^(?:[a-z]+:|\/\/)/iu.test(url) || url.startsWith('#')) {
                 return false;
             }
             
             // Extract the path part (before # or ?)
-            const [pathPart] = url.split(/[#?]/);
+            const [pathPart] = url.split(/[#?]/u);
             if (!pathPart) {
                 return false;
             }
@@ -41,12 +41,21 @@ export default createRule("no-self-destination", {
             // Normalize the path
             let targetPath = pathPart;
             
-            // Handle relative paths
+            // Handle relative paths - resolve them relative to current file
             if (targetPath.startsWith('./')) {
                 targetPath = targetPath.substring(2);
             } else if (targetPath.startsWith('../')) {
-                // For now, we don't handle parent directory references
-                return false;
+                // Resolve the relative path to check if it points to the current file
+                const currentDir = path.dirname(filename);
+                const resolvedPath = path.resolve(currentDir, targetPath);
+                const resolvedBasename = path.basename(resolvedPath);
+                
+                // Check if resolved path points to the current file
+                const baseWithoutExt = path.parse(basename).name;
+                const resolvedWithoutExt = path.parse(resolvedBasename).name;
+                
+                return resolvedBasename === basename || 
+                       (resolvedWithoutExt === baseWithoutExt && resolvedBasename.indexOf('.') === -1);
             }
             
             // Check if the target path matches the current file

@@ -24,11 +24,7 @@ This rule reports redundant self-destination links. When a file links to itself 
 
 This rule has no options.
 
-## 📚 Further Reading
-
-- [Markdown Link Best Practices](https://www.markdownguide.org/basic-syntax/#links)
-
 ## 👫 Related Rules
 
-- [no-missing-path](./no-missing-path.md)
+- [markdown-links/no-missing-path](./no-missing-path.md)
 
