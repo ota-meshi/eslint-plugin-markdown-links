@@ -85,10 +85,11 @@ Code:
   1 | ## Edge Cases Parent Directory Self-destination
   2 |
   3 | <!-- ✗ BAD: Self-destination via parent without fragment with starting with ./ -->
-  4 | [link](./../invalid/parent-dir-input.md)
+  4 | [link](./../invalid/edge-cases-parent-dir-input.md)
   5 |
 
-No errors
+Output:
+  4:1-4:54: Redundant self-destination link './../invalid/edge-cases-parent-dir-input.md'. Use '#' instead. (markdown-links/no-self-destination)
 ---
 
 
