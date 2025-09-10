@@ -43,7 +43,7 @@ export default createRule("no-self-destination", {
       let targetPath = pathPart;
 
       // Handle relative paths - resolve them relative to current file
-      if (targetPath.startsWith("./")) {
+      while (targetPath.startsWith("./")) {
         targetPath = targetPath.substring(2);
       }
       

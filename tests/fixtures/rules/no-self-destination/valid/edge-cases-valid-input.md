@@ -14,3 +14,6 @@
 
 <!-- ✓ GOOD: Just query -->
 [query](?param=value)
+
+<!-- ✓ GOOD: Different file without extension -->
+[link](basic-input)

@@ -87,9 +87,15 @@ Code:
   3 | <!-- ✗ BAD: Self-destination via parent without fragment with starting with ./ -->
   4 | [link](./../invalid/edge-cases-parent-dir-input.md)
     | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
-  5 |
+  5 | [link](././.././invalid/edge-cases-parent-dir-input.md)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [2]
+  6 | [link](././.././../no-self-destination/invalid/edge-cases-parent-dir-input.md)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [3]
+  7 |
 
 [1] Redundant self-destination link './../invalid/edge-cases-parent-dir-input.md'. Use '#' instead.
+[2] Redundant self-destination link '././.././invalid/edge-cases-parent-dir-input.md'. Use '#' instead.
+[3] Redundant self-destination link '././.././../no-self-destination/invalid/edge-cases-parent-dir-input.md'. Use '#' instead.
 ---
 
 
