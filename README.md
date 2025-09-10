@@ -92,8 +92,6 @@ The rules with the following star ⭐ are included in the configs.
 
 ### Markdown Link Rules
 
-<!-- eslint-disable markdown-links/no-dead-urls -- Auto generated -->
-
 <!-- prettier-ignore-start -->
 
 | Rule ID | Description | Fixable | RECOMMENDED |
@@ -104,8 +102,6 @@ The rules with the following star ⭐ are included in the configs.
 | [markdown-links/no-self-destination](https://ota-meshi.github.io/eslint-plugin-markdown-links/rules/no-self-destination.html) | disallow redundant self-destination links |  | ⭐ |
 
 <!-- prettier-ignore-end -->
-
-<!-- eslint-enable markdown-links/no-dead-urls -- Auto generated -->
 
 <!--RULES_TABLE_END-->
 <!--RULES_SECTION_END-->

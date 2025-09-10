@@ -1,5 +1,11 @@
 # eslint-plugin-markdown-links
 
+## 0.5.0
+
+### Minor Changes
+
+- [#24](https://github.com/ota-meshi/eslint-plugin-markdown-links/pull/24) [`0721145`](https://github.com/ota-meshi/eslint-plugin-markdown-links/commit/0721145d8cd37556b23a81753028fbf25e583017) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - feat: add [`markdown-links/no-self-destination`](https://ota-meshi.github.io/eslint-plugin-markdown-links/rules/no-self-destination.html) rule
+
 ## 0.4.0
 
 ### Minor Changes
