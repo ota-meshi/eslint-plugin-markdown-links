@@ -269,6 +269,7 @@ export default defineConfig([
       "markdown/no-missing-label-refs": "off",
       "markdown/no-multiple-h1": "off",
       "markdown/fenced-code-language": "off",
+      "markdown/no-empty-links": "off",
       "markdown-preferences/prefer-link-reference-definitions": "off",
       ...Object.fromEntries(
         rules.map((rule) => [rule.meta.docs.ruleId, "off"]),

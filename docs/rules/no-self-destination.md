@@ -22,10 +22,12 @@ This rule reports redundant self-destination links. When a file links to itself 
 <!-- eslint markdown-links/no-self-destination: 'error' -->
 
 <!-- ✓ GOOD -->
+
 [link](#fragment)
 [link](./other.md#fragment)
 
 <!-- ✗ BAD -->
+
 [link](./self.md#fragment)
 [link](self.md#fragment)
 ```

@@ -72,3 +72,45 @@ Code:
 [3] Redundant self-destination link 'edge-cases-input'. Use '#' instead.
 [4] Redundant self-destination link './edge-cases-input.md#some%20fragment'. Use '#some%20fragment' instead.
 ---
+
+
+Test: no-self-destination >> invalid
+Filename: tests/fixtures/rules/no-self-destination/invalid/edge-cases-parent-dir-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Plugins: unable to serialize
+
+Code:
+  1 | ## Edge Cases Parent Directory Self-destination
+  2 |
+  3 | <!-- ✗ BAD: Self-destination via parent without fragment with starting with ./ -->
+  4 | [link](./../invalid/parent-dir-input.md)
+  5 |
+
+No errors
+---
+
+
+Test: no-self-destination >> invalid
+Filename: tests/fixtures/rules/no-self-destination/invalid/parent-dir-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Plugins: unable to serialize
+
+Code:
+  1 | # Parent Directory Self-destination
+  2 |
+  3 | <!-- ✗ BAD: Self-destination via parent directory -->
+  4 | [link](../invalid/parent-dir-input.md#fragment)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  5 |
+  6 | <!-- ✗ BAD: Self-destination via parent without fragment -->
+  7 | [link](../invalid/parent-dir-input.md)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [2]
+  8 |
+
+[1] Redundant self-destination link '../invalid/parent-dir-input.md#fragment'. Use '#fragment' instead.
+[2] Redundant self-destination link '../invalid/parent-dir-input.md'. Use '#' instead.
+---
