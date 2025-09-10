@@ -134,7 +134,7 @@ export default defineConfig([
     files: ["**/*.md", "*.md"],
     extends: [
       markdown.configs.recommended,
-      markdownPreferences.configs.recommended,
+      markdownPreferences.configs.standard,
       markdownLinks.configs.recommended,
     ],
     rules: {
@@ -157,7 +157,6 @@ export default defineConfig([
         },
       ],
       "markdown-preferences/definitions-last": "error",
-      "markdown-preferences/no-trailing-spaces": "error",
       "markdown-preferences/prefer-link-reference-definitions": "error",
       "markdown-preferences/heading-casing": [
         "error",
@@ -173,7 +172,7 @@ export default defineConfig([
       "markdown-preferences/no-multiple-empty-lines": "error",
       "markdown-preferences/ordered-list-marker-sequence": "error",
       "markdown-preferences/ordered-list-marker-start": "error",
-      "markdown-preferences/atx-headings-closing-sequence": "error",
+      "markdown-preferences/atx-heading-closing-sequence": "error",
       "markdown-preferences/emoji-notation": "error",
       "markdown-preferences/table-header-casing": [
         "error",
