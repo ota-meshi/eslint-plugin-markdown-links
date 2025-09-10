@@ -46,7 +46,7 @@ export default createRule("no-self-destination", {
       while (targetPath.startsWith("./")) {
         targetPath = targetPath.substring(2);
       }
-      
+
       if (targetPath.startsWith("../")) {
         // Resolve the relative path to check if it points to the current file
         const currentDir = path.dirname(filename);
