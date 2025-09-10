@@ -53,6 +53,6 @@ Please use GitHub's Issues/PRs.
 
 See the [LICENSE](https://github.com/ota-meshi/eslint-plugin-markdown-links/blob/main/LICENSE) file for license rights and limitations (MIT).
 
+[@eslint/markdown]: https://github.com/eslint/markdown
 [npm-package]: https://www.npmjs.com/package/eslint-plugin-markdown-links
 [npmtrends]: http://www.npmtrends.com/eslint-plugin-markdown-links
-[@eslint/markdown]: https://github.com/eslint/markdown

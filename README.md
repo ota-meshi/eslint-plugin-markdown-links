@@ -41,6 +41,7 @@ npm install --save-dev eslint @eslint/markdown eslint-plugin-markdown-links
 ## 📖 Usage
 
 <!--USAGE_SECTION_START-->
+
 <!--USAGE_GUIDE_START-->
 
 ### Configuration
@@ -79,6 +80,7 @@ See [the rule list](https://ota-meshi.github.io/eslint-plugin-markdown-links/rul
 Is not supported.
 
 <!--USAGE_GUIDE_END-->
+
 <!--USAGE_SECTION_END-->
 
 ## ✅ Rules
@@ -104,6 +106,7 @@ The rules with the following star ⭐ are included in the configs.
 <!-- prettier-ignore-end -->
 
 <!--RULES_TABLE_END-->
+
 <!--RULES_SECTION_END-->
 
 ## 👫 Related Packages
@@ -127,6 +130,6 @@ Please use GitHub's Issues/PRs.
 
 See the [LICENSE](./LICENSE) file for license rights and limitations (MIT).
 
+[@eslint/markdown]: https://github.com/eslint/markdown
 [npm-package]: https://www.npmjs.com/package/eslint-plugin-markdown-links
 [npmtrends]: http://www.npmtrends.com/eslint-plugin-markdown-links
-[@eslint/markdown]: https://github.com/eslint/markdown
