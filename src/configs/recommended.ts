@@ -20,4 +20,5 @@ export const plugins = {
 export const rules: Linter.RulesRecord = {
   // eslint-plugin-markdown-links rules
   "markdown-links/no-missing-path": "error",
+  "markdown-links/no-self-destination": "error",
 };

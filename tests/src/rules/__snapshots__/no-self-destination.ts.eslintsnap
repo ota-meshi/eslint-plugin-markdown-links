@@ -1,0 +1,123 @@
+# eslint-snapshot-rule-tester format: v1
+
+
+Test: no-self-destination >> invalid
+Filename: tests/fixtures/rules/no-self-destination/invalid/basic-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Plugins: unable to serialize
+
+Code:
+  1 | # Self-destination Links
+  2 |
+  3 | <!-- ✗ BAD: Self-destination with fragment -->
+  4 | [link](./basic-input.md#fragment)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  5 |
+  6 | <!-- ✗ BAD: Self-destination without leading ./ -->
+  7 | [link](basic-input.md#fragment)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [2]
+  8 |
+  9 | <!-- ✗ BAD: Self-destination without fragment -->
+ 10 | [link](./basic-input.md)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~ [3]
+ 11 |
+ 12 | <!-- ✗ BAD: Self-destination image -->
+ 13 | ![image](./basic-input.md#image)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [4]
+ 14 |
+ 15 | <!-- ✗ BAD: Self-destination in definition -->
+ 16 | [ref]
+ 17 |
+ 18 | [ref]: ./basic-input.md#ref
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~ [5]
+
+[1] Redundant self-destination link './basic-input.md#fragment'. Use '#fragment' instead.
+[2] Redundant self-destination link 'basic-input.md#fragment'. Use '#fragment' instead.
+[3] Redundant self-destination link './basic-input.md'. Use '#' instead.
+[4] Redundant self-destination link './basic-input.md#image'. Use '#image' instead.
+[5] Redundant self-destination link './basic-input.md#ref'. Use '#ref' instead.
+---
+
+
+Test: no-self-destination >> invalid
+Filename: tests/fixtures/rules/no-self-destination/invalid/edge-cases-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Plugins: unable to serialize
+
+Code:
+  1 | # Edge Cases
+  2 |
+  3 | <!-- ✗ BAD: Self-destination with query -->
+  4 | [link](./edge-cases-input.md?query=value)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  5 |
+  6 | <!-- ✗ BAD: Self-destination with query and fragment -->
+  7 | [link](./edge-cases-input.md?query=value#fragment)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [2]
+  8 |
+  9 | <!-- ✗ BAD: Self-destination without extension -->
+ 10 | [link](edge-cases-input)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~ [3]
+ 11 |
+ 12 | <!-- ✗ BAD: Self-destination with encoding -->
+ 13 | [link](./edge-cases-input.md#some%20fragment)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [4]
+
+[1] Redundant self-destination link './edge-cases-input.md?query=value'. Use '?query=value' instead.
+[2] Redundant self-destination link './edge-cases-input.md?query=value#fragment'. Use '#fragment' instead.
+[3] Redundant self-destination link 'edge-cases-input'. Use '#' instead.
+[4] Redundant self-destination link './edge-cases-input.md#some%20fragment'. Use '#some%20fragment' instead.
+---
+
+
+Test: no-self-destination >> invalid
+Filename: tests/fixtures/rules/no-self-destination/invalid/edge-cases-parent-dir-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Plugins: unable to serialize
+
+Code:
+  1 | ## Edge Cases Parent Directory Self-destination
+  2 |
+  3 | <!-- ✗ BAD: Self-destination via parent without fragment with starting with ./ -->
+  4 | [link](./../invalid/edge-cases-parent-dir-input.md)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  5 | [link](././.././invalid/edge-cases-parent-dir-input.md)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [2]
+  6 | [link](././.././../no-self-destination/invalid/edge-cases-parent-dir-input.md)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [3]
+  7 |
+
+[1] Redundant self-destination link './../invalid/edge-cases-parent-dir-input.md'. Use '#' instead.
+[2] Redundant self-destination link '././.././invalid/edge-cases-parent-dir-input.md'. Use '#' instead.
+[3] Redundant self-destination link '././.././../no-self-destination/invalid/edge-cases-parent-dir-input.md'. Use '#' instead.
+---
+
+
+Test: no-self-destination >> invalid
+Filename: tests/fixtures/rules/no-self-destination/invalid/parent-dir-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Plugins: unable to serialize
+
+Code:
+  1 | # Parent Directory Self-destination
+  2 |
+  3 | <!-- ✗ BAD: Self-destination via parent directory -->
+  4 | [link](../invalid/parent-dir-input.md#fragment)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [1]
+  5 |
+  6 | <!-- ✗ BAD: Self-destination via parent without fragment -->
+  7 | [link](../invalid/parent-dir-input.md)
+    | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [2]
+  8 |
+
+[1] Redundant self-destination link '../invalid/parent-dir-input.md#fragment'. Use '#fragment' instead.
+[2] Redundant self-destination link '../invalid/parent-dir-input.md'. Use '#' instead.
+---
