@@ -22,6 +22,8 @@ jobs:
         uses: actions/checkout@v5
       - name: Setup Node.js
         uses: actions/setup-node@v5
+        with:
+          node-version: 24
       - name: Install Dependencies
         run: npm install
       - name: Build
@@ -37,4 +39,3 @@ jobs:
         env:
           SYNCKIT_TS_RUNNER: oxc
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
