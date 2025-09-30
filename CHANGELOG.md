@@ -1,5 +1,11 @@
 # eslint-plugin-markdown-links
 
+## 0.5.1
+
+### Patch Changes
+
+- [#37](https://github.com/ota-meshi/eslint-plugin-markdown-links/pull/37) [`baac1b2`](https://github.com/ota-meshi/eslint-plugin-markdown-links/commit/baac1b2fc5551f5d52dc1d623f479568f5601e53) Thanks [@ota-meshi](https://github.com/ota-meshi)! - use trusted publisher
+
 ## 0.5.0
 
 ### Minor Changes
