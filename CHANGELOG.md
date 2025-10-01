@@ -1,5 +1,11 @@
 # eslint-plugin-markdown-links
 
+## 0.6.0
+
+### Minor Changes
+
+- [#32](https://github.com/ota-meshi/eslint-plugin-markdown-links/pull/32) [`e1d4a63`](https://github.com/ota-meshi/eslint-plugin-markdown-links/commit/e1d4a631ff1cb7b6825c9f0f548ef97a9d53efb0) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency sdbm to v3
+
 ## 0.5.1
 
 ### Patch Changes
