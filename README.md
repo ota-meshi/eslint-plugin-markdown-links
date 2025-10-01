@@ -96,12 +96,12 @@ The rules with the following star ⭐ are included in the configs.
 
 <!-- prettier-ignore-start -->
 
-| Rule ID | Description | Fixable | RECOMMENDED |
-|:--------|:------------|:-------:|:-----------:|
-| [markdown-links/no-dead-urls](https://ota-meshi.github.io/eslint-plugin-markdown-links/rules/no-dead-urls.html) | disallow dead external link urls |  |  |
-| [markdown-links/no-missing-fragments](https://ota-meshi.github.io/eslint-plugin-markdown-links/rules/no-missing-fragments.html) | disallow missing fragment identifiers in same-file Markdown links |  |  |
-| [markdown-links/no-missing-path](https://ota-meshi.github.io/eslint-plugin-markdown-links/rules/no-missing-path.html) | disallow missing local file paths in Markdown links and images |  | ⭐ |
-| [markdown-links/no-self-destination](https://ota-meshi.github.io/eslint-plugin-markdown-links/rules/no-self-destination.html) | disallow redundant self-destination links |  | ⭐ |
+| Rule ID                                                                                                                         | Description                                                       | Fixable | RECOMMENDED |
+| :------------------------------------------------------------------------------------------------------------------------------ | :---------------------------------------------------------------- | :-----: | :---------: |
+| [markdown-links/no-dead-urls](https://ota-meshi.github.io/eslint-plugin-markdown-links/rules/no-dead-urls.html)                 | disallow dead external link urls                                  |         |             |
+| [markdown-links/no-missing-fragments](https://ota-meshi.github.io/eslint-plugin-markdown-links/rules/no-missing-fragments.html) | disallow missing fragment identifiers in same-file Markdown links |         |             |
+| [markdown-links/no-missing-path](https://ota-meshi.github.io/eslint-plugin-markdown-links/rules/no-missing-path.html)           | disallow missing local file paths in Markdown links and images    |         |     ⭐      |
+| [markdown-links/no-self-destination](https://ota-meshi.github.io/eslint-plugin-markdown-links/rules/no-self-destination.html)   | disallow redundant self-destination links                         |         |     ⭐      |
 
 <!-- prettier-ignore-end -->
 

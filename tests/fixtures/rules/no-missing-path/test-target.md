@@ -8,7 +8,7 @@
 
 <div id="html-id">
 
-  Contents
+Contents
 
 </div>
 
