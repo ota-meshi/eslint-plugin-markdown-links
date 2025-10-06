@@ -60,6 +60,7 @@ export default createRule<
             enum: ["github", "mdit-vue"],
           },
         },
+        additionalProperties: false,
       },
     ],
     messages: {
