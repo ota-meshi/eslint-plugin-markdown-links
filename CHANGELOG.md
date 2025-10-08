@@ -1,5 +1,11 @@
 # eslint-plugin-markdown-links
 
+## 0.6.1
+
+### Patch Changes
+
+- [#41](https://github.com/ota-meshi/eslint-plugin-markdown-links/pull/41) [`da9a7c9`](https://github.com/ota-meshi/eslint-plugin-markdown-links/commit/da9a7c9493ac18b304d876475194411473d3ef36) Thanks [@andreww2012](https://github.com/andreww2012)! - fix: disallow extra properties in rule options
+
 ## 0.6.0
 
 ### Minor Changes
