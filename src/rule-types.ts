@@ -52,7 +52,6 @@ type MarkdownLinksNoDeadUrls = []|[{
 type MarkdownLinksNoMissingFragments = []|[{
   ignoreCase?: boolean
   slugify?: ("github" | "mdit-vue")
-  [k: string]: unknown | undefined
 }]
 // ----- markdown-links/no-missing-path -----
 type MarkdownLinksNoMissingPath = []|[{
@@ -65,7 +64,5 @@ type MarkdownLinksNoMissingPath = []|[{
   anchorOption?: {
     ignoreCase?: boolean
     slugify?: ("github" | "mdit-vue")
-    [k: string]: unknown | undefined
   }
-  [k: string]: unknown | undefined
 }]
