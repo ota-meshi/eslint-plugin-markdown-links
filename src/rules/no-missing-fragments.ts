@@ -25,7 +25,7 @@ function* parseHtmlToExtractIdValues(code: string): Iterable<string> {
     if (tarOrText.type !== "opening-tag") continue;
     for (const attr of iterateAttrs(tarOrText.value)) {
       if (attr.name === "id" && attr.value) {
-        yield attr.value;
+        yield attr.value.value;
       }
     }
   }

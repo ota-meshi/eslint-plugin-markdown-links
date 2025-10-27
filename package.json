@@ -63,6 +63,7 @@
   },
   "dependencies": {
     "@mdit-vue/shared": "^3.0.2",
+    "entities": "^7.0.0",
     "fast-content-type-parse": "^3.0.0",
     "github-slugger": "^2.0.0",
     "sdbm": "^3.0.0",

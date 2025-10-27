@@ -1,3 +1,6 @@
+import { EntityDecoder } from "entities";
+import { DecodingMode, htmlDecodeTree } from "entities/decode";
+
 export type OpeningTag = {
   type: "opening-tag";
   tagName: string;
@@ -38,7 +41,10 @@ export type HTMLToken =
   | Doctype;
 export type Attr = {
   name: string;
-  value?: string;
+  value?: {
+    value: string;
+    raw: string;
+  };
 };
 /**
  * Iterates over the tokens in a HTML string.
@@ -142,7 +148,7 @@ export function* iterateAttrs(tag: string): Iterable<Attr> {
         // Quoted
         yield {
           name: attrName,
-          value: str.slice(valueStart + 1, endIndex),
+          value: parseAttrValue(str.slice(valueStart + 1, endIndex)),
         };
         attrNameRe.lastIndex = endIndex + 1;
         continue;
@@ -156,14 +162,14 @@ export function* iterateAttrs(tag: string): Iterable<Attr> {
     if (endIndex >= 0) {
       yield {
         name: attrName,
-        value: str.slice(valueStart, endIndex),
+        value: parseAttrValue(str.slice(valueStart, endIndex)),
       };
       attrNameRe.lastIndex = endIndex + 1;
       continue;
     } else {
       yield {
         name: attrName,
-        value: str.slice(valueStart),
+        value: parseAttrValue(str.slice(valueStart)),
       };
       return;
     }
@@ -186,4 +192,53 @@ function findCharIndex(
     }
   }
   return -1;
+}
+
+/**
+ *
+ */
+function parseAttrValue(raw: string): { value: string; raw: string } {
+  let result = "";
+  let index = 0;
+  while (index < raw.length) {
+    const entity = getHTMLEntity(index);
+    if (entity) {
+      result += entity.entity;
+      index += entity.length;
+      continue;
+    }
+    const ch = raw[index++];
+    result += ch;
+  }
+  return {
+    value: result,
+    raw,
+  };
+
+  /**
+   * Get HTML entity from the given position
+   */
+  function getHTMLEntity(position: number) {
+    let codeOffset = position;
+    if (raw[codeOffset++] !== "&") return null;
+
+    let entity = "";
+    const entityDecoder = new EntityDecoder(
+      htmlDecodeTree,
+      (cp) => (entity += String.fromCodePoint(cp)),
+    );
+    entityDecoder.startEntity(DecodingMode.Attribute);
+    const length = entityDecoder.write(raw, codeOffset);
+
+    if (length < 0) {
+      return null;
+    }
+    if (length === 0) {
+      return null;
+    }
+    return {
+      entity,
+      length,
+    };
+  }
 }
