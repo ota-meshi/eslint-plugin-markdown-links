@@ -1,5 +1,11 @@
 # eslint-plugin-markdown-links
 
+## 0.6.2
+
+### Patch Changes
+
+- [#49](https://github.com/ota-meshi/eslint-plugin-markdown-links/pull/49) [`dacf247`](https://github.com/ota-meshi/eslint-plugin-markdown-links/commit/dacf247834d0b96d948006e547820f47d060241c) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix([markdown-links/no-missing-fragments](https://ota-meshi.github.io/eslint-plugin-markdown-links/rules/no-missing-fragments.html)): correctly handle attribute values with entities
+
 ## 0.6.1
 
 ### Patch Changes
