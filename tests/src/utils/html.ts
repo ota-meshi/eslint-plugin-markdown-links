@@ -184,12 +184,12 @@ describe("iterateAttrs", () => {
     const result = Array.from(iterateAttrs(tag));
     assert.deepStrictEqual(result, [
       { name: "a" },
-      { name: "b", value: { value: "B", raw: `B` } },
-      { name: "c", value: { value: "123", raw: `123` } },
-      { name: "d", value: { value: "D", raw: `D` } },
+      { name: "b", value: "B" },
+      { name: "c", value: "123" },
+      { name: "d", value: "D" },
       { name: "e" },
-      { name: "f", value: { value: "", raw: `` } },
-      { name: "g", value: { value: "h=''", raw: "h=''" } },
+      { name: "f", value: "" },
+      { name: "g", value: "h=''" },
     ]);
   });
 
@@ -202,17 +202,13 @@ describe("iterateAttrs", () => {
   it("should handle attributes with = and <,>", () => {
     const tag = "<a data='1=2>3'>";
     const result = Array.from(iterateAttrs(tag));
-    assert.deepStrictEqual(result, [
-      { name: "data", value: { value: "1=2>3", raw: "1=2>3" } },
-    ]);
+    assert.deepStrictEqual(result, [{ name: "data", value: "1=2>3" }]);
   });
 
   it("should handle attribute value with quotes and escapes", () => {
     const tag = "<a href='foo\"bar'>";
     const result = Array.from(iterateAttrs(tag));
-    assert.deepStrictEqual(result, [
-      { name: "href", value: { value: 'foo"bar', raw: 'foo"bar' } },
-    ]);
+    assert.deepStrictEqual(result, [{ name: "href", value: 'foo"bar' }]);
   });
 
   it("should handle empty tag and empty attribute", () => {
@@ -224,8 +220,6 @@ describe("iterateAttrs", () => {
   it("should handle multi-line tag and attribute", () => {
     const tag = `<a\nhref="foo"\n>`;
     const result = Array.from(iterateAttrs(tag));
-    assert.deepStrictEqual(result, [
-      { name: "href", value: { value: "foo", raw: `foo` } },
-    ]);
+    assert.deepStrictEqual(result, [{ name: "href", value: "foo" }]);
   });
 });

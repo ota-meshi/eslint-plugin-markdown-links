@@ -248,8 +248,7 @@ async function handleTextHtml(
     if (
       !attrs.some(
         (attr) =>
-          attr.name === "http-equiv" &&
-          attr.value?.value.toLowerCase() === "refresh",
+          attr.name === "http-equiv" && attr.value?.toLowerCase() === "refresh",
       )
     )
       continue;
@@ -314,7 +313,7 @@ function* extractIdValues(openingTags: OpeningTag[]): Iterable<string> {
   for (const openingTag of openingTags) {
     for (const attr of iterateAttrs(openingTag.value)) {
       if (attr.name === "id" && attr.value) {
-        yield attr.value.value;
+        yield attr.value;
       }
     }
   }

@@ -8,6 +8,7 @@ import type { Linter } from 'eslint'
 
 declare module 'eslint' {
   namespace Linter {
+    // @ts-expect-error
     interface RulesRecord extends RuleOptions {}
   }
 }

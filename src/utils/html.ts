@@ -41,10 +41,7 @@ export type HTMLToken =
   | Doctype;
 export type Attr = {
   name: string;
-  value?: {
-    value: string;
-    raw: string;
-  };
+  value?: string;
 };
 /**
  * Iterates over the tokens in a HTML string.
@@ -195,9 +192,9 @@ function findCharIndex(
 }
 
 /**
- *
+ * Parses attribute value, decoding HTML entities.
  */
-function parseAttrValue(raw: string): { value: string; raw: string } {
+function parseAttrValue(raw: string): string {
   let result = "";
   let index = 0;
   while (index < raw.length) {
@@ -210,10 +207,7 @@ function parseAttrValue(raw: string): { value: string; raw: string } {
     const ch = raw[index++];
     result += ch;
   }
-  return {
-    value: result,
-    raw,
-  };
+  return result;
 
   /**
    * Get HTML entity from the given position
