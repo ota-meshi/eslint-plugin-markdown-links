@@ -12,5 +12,6 @@ export default defineConfig([
     },
     format: ["esm"],
     treeshake: true,
+    fixedExtension: false,
   },
 ]);
