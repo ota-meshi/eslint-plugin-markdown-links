@@ -38,8 +38,8 @@ export async function getCached(
 
   const alive = Boolean(
     typeof data.expired === "number" &&
-      data.expired >= Date.now() &&
-      data.v === VERSION,
+    data.expired >= Date.now() &&
+    data.v === VERSION,
   );
   if (!alive) {
     return null;
