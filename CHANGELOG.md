@@ -1,5 +1,11 @@
 # eslint-plugin-markdown-links
 
+## 0.7.0
+
+### Minor Changes
+
+- [#62](https://github.com/ota-meshi/eslint-plugin-markdown-links/pull/62) [`c3c3bd2`](https://github.com/ota-meshi/eslint-plugin-markdown-links/commit/c3c3bd202a2fb7e8a43740a7509ac77d39b59da8) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add fallback support for npm package related URLs
+
 ## 0.6.2
 
 ### Patch Changes
