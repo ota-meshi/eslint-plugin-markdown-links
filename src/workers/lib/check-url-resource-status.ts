@@ -22,30 +22,30 @@ type States = {
   retries: number;
 };
 
-type FetchError = {
+export type FetchError = {
   type: "fetch";
   message: string;
 };
-type ResponseError = {
+export type ResponseError = {
   type: "response";
   status: number;
 };
-type MaxRedirectError = {
+export type MaxRedirectError = {
   type: "max-redirect";
   redirects: number;
   maxRedirects: number;
 };
-type SharedDeclarativeRefreshError = {
+export type SharedDeclarativeRefreshError = {
   type: "shared-declarative-refresh";
   url: string;
   from: string;
 };
-type MissingAnchorError = {
+export type MissingAnchorError = {
   type: "missing-anchor";
   url: string;
   fragment: string;
 };
-type ErrorResult = {
+export type ErrorResult = {
   type: "error";
   url: string;
   error:
@@ -55,7 +55,7 @@ type ErrorResult = {
     | SharedDeclarativeRefreshError
     | MissingAnchorError;
 };
-type SuccessResult = {
+export type SuccessResult = {
   type: "success";
   url: string;
 };
@@ -73,6 +73,7 @@ function getSleepMs(retries: number) {
  */
 export async function checkUrlResourceStatus(
   url: URL,
+  headers: Record<string, string> | null | undefined,
   options: Options,
 ): Promise<Result> {
   const state: States = {
@@ -81,7 +82,7 @@ export async function checkUrlResourceStatus(
     retries: 0,
   };
 
-  return checkUrlResourceStatusInternal(state, url, options);
+  return checkUrlResourceStatusInternal(state, url, headers, options);
 }
 
 /**
@@ -90,6 +91,7 @@ export async function checkUrlResourceStatus(
 async function checkUrlResourceStatusInternal(
   state: States,
   url: URL,
+  headers: Record<string, string> | null | undefined,
   options: Options,
 ): Promise<Result> {
   if (state.redirects > options.maxRedirects) {
@@ -123,6 +125,7 @@ async function checkUrlResourceStatusInternal(
       headers: {
         accept:
           "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        ...headers,
       },
       method: "GET",
       redirect: "manual",
@@ -132,7 +135,8 @@ async function checkUrlResourceStatusInternal(
 
     clearTimeout(timeoutTimeoutId);
   } catch (error) {
-    if (state.retries < options.maxRetries) return retry(state, url, options);
+    if (state.retries < options.maxRetries)
+      return retry(state, url, headers, options);
 
     return {
       type: "error",
@@ -157,6 +161,7 @@ async function checkUrlResourceStatusInternal(
           retries: 0,
         },
         redirect,
+        null,
         options,
       );
     }
@@ -175,6 +180,7 @@ async function checkUrlResourceStatusInternal(
           retries: 0,
         },
         url,
+        headers,
         options,
       );
     }
@@ -208,14 +214,19 @@ async function checkUrlResourceStatusInternal(
 /**
  * Retry the request.
  */
-async function retry(state: States, url: URL, options: Options) {
+async function retry(
+  state: States,
+  url: URL,
+  headers: Record<string, string> | null | undefined,
+  options: Options,
+) {
   state.retries++;
 
   await new Promise(function (resolve) {
     setTimeout(resolve, getSleepMs(state.retries));
   });
 
-  return checkUrlResourceStatusInternal(state, url, options);
+  return checkUrlResourceStatusInternal(state, url, headers, options);
 }
 
 /**
@@ -272,7 +283,7 @@ async function handleTextHtml(
           url: url.href,
         };
       }
-      return checkUrlResourceStatusInternal(state, redirect.url, options);
+      return checkUrlResourceStatusInternal(state, redirect.url, null, options);
     }
   }
 

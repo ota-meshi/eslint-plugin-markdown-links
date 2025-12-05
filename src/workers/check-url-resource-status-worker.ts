@@ -2,6 +2,7 @@ import type { Options, Result } from "./lib/check-url-resource-status.ts";
 import { checkUrlResourceStatus } from "./lib/check-url-resource-status.ts";
 import { runAsWorker } from "synckit";
 import { getCached, writeCache } from "./lib/cache.ts";
+import { getFallbackUrl } from "./lib/get-fallback-url.ts";
 
 export type Params = {
   urls: string[];
@@ -10,7 +11,7 @@ export type Params = {
 
 export type UrlStatus = {
   url: string;
-  status: Result | { type: "ignored" };
+  status: Result | { type: "ignored" } | { type: "fallback"; urls: string[] };
 };
 
 runAsWorker(checkUrls);
@@ -20,13 +21,42 @@ runAsWorker(checkUrls);
  */
 async function checkUrls(params: Params): Promise<UrlStatus[]> {
   const checkUrlsOptions: Options = params.checkUrlsOptions;
-  const result = await Promise.all(
-    params.urls.map(async (url) => {
-      return checkUrlWithCache(url, checkUrlsOptions);
-    }),
+  const results = await Promise.all(
+    params.urls.map(
+      async (urlStr): Promise<UrlStatus> =>
+        (await checkFallbackUrl(urlStr, checkUrlsOptions)) ||
+        (await checkUrlWithCache(urlStr, checkUrlsOptions)),
+    ),
   );
 
-  return result;
+  return results;
+}
+
+/**
+ * Check if the fallback URL is alive.
+ */
+async function checkFallbackUrl(
+  urlStr: string,
+  checkUrlsOptions: Options,
+): Promise<UrlStatus | null> {
+  const url = new URL(urlStr);
+  const fallbackUrls = getFallbackUrl(url);
+  if (!fallbackUrls.length) return null;
+
+  const fallbackResult = await Promise.all(
+    fallbackUrls.map((u) =>
+      checkUrlWithCache(u.url, checkUrlsOptions, u.headers),
+    ),
+  );
+
+  if (fallbackResult.some((r) => r.status.type === "error")) return null;
+  return {
+    url: urlStr,
+    status: {
+      type: "fallback",
+      urls: fallbackUrls.map((u) => u.url),
+    },
+  };
 }
 
 /**
@@ -35,6 +65,7 @@ async function checkUrls(params: Params): Promise<UrlStatus[]> {
 async function checkUrlWithCache(
   url: string,
   checkUrlsOptions: Options,
+  headers?: Record<string, string> | null,
 ): Promise<UrlStatus> {
   const cached = await getCached(url, checkUrlsOptions);
 
@@ -42,7 +73,7 @@ async function checkUrlWithCache(
     return cached;
   }
 
-  const result = await checkUrl(url, checkUrlsOptions);
+  const result = await checkUrl(url, checkUrlsOptions, headers);
 
   if (result.status.type !== "ignored") {
     await writeCache(url, checkUrlsOptions, result);
@@ -57,12 +88,17 @@ async function checkUrlWithCache(
 async function checkUrl(
   url: string,
   checkUrlsOptions: Options,
+  headers: Record<string, string> | null | undefined,
 ): Promise<UrlStatus> {
   if (!url.startsWith("http")) {
     return { url, status: { type: "ignored" } };
   }
   return {
     url,
-    status: await checkUrlResourceStatus(new URL(url), checkUrlsOptions),
+    status: await checkUrlResourceStatus(
+      new URL(url),
+      headers,
+      checkUrlsOptions,
+    ),
   };
 }
