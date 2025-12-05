@@ -88,6 +88,7 @@ export default defineConfig([
     rules: {
       complexity: "off",
       "func-style": "off",
+      "no-return-await": "off",
       "n/file-extension-in-import": "off",
     },
   },
@@ -183,11 +184,6 @@ export default defineConfig([
       "markdown-links/no-dead-urls": [
         "error",
         {
-          ignoreUrls: [
-            "https://www.npmjs.com/package/eslint-plugin-markdown-links",
-            "https://www.npmjs.com/package/@eslint/markdown",
-            "https://www.npmjs.com/package/github-slugger",
-          ],
           allowedAnchors: {
             "https://eslint-online-playground.netlify.app/": "/.*/u",
           },
