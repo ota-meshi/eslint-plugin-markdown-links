@@ -1,5 +1,11 @@
 # eslint-plugin-markdown-links
 
+## 0.7.1
+
+### Patch Changes
+
+- [#67](https://github.com/ota-meshi/eslint-plugin-markdown-links/pull/67) [`b64a735`](https://github.com/ota-meshi/eslint-plugin-markdown-links/commit/b64a735e1005a7b9eee674aa3437178e1decf73c) Thanks [@ota-meshi](https://github.com/ota-meshi)! - Support npm fallback detection for `npmjs.com` links without `www` and without the `/package` path, including scoped packages.
+
 ## 0.7.0
 
 ### Minor Changes
