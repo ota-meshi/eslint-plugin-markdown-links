@@ -69,6 +69,28 @@ This rule is heavily inspired by [remark-lint-no-dead-urls], and many of its opt
 - `rateLimitPerDomain` (type: `integer`, default: `0`): Minimum time in milliseconds to wait between requests to the same domain. Set to 0 to disable rate limiting. This helps avoid triggering rate limits or bot protection (e.g., Cloudflare) on domains like npmjs.com. A value of 1000-2000ms is recommended when checking many links to the same domain.
 - `allowStatusCodes` (type: `Record<string, number[]>`, default: `{}`): A mapping of domain patterns (as regular expressions) to arrays of HTTP status codes that should be considered successful for those domains. For example, `{ "npmjs\\.com": [403] }` would treat 403 responses from npmjs.com as successful. This is useful when certain domains return non-success status codes for bot-like requests but the links are actually valid.
 
+### Example: Handling rate-limited domains
+
+If you're checking many links to npmjs.com and getting 403 errors due to Cloudflare protection:
+
+```js
+{
+  "markdown-links/no-dead-urls": [
+    "error",
+    {
+      "rateLimitPerDomain": 1500,
+      "allowStatusCodes": {
+        "npmjs\\.com": [403]
+      }
+    }
+  ]
+}
+```
+
+This configuration:
+- Waits at least 1.5 seconds between requests to the same domain
+- Treats 403 responses from npmjs.com as successful (link is valid)
+
 ## 📚 Further Reading
 
 - [remark-lint-no-dead-urls] - A similar rule for Remark, which inspired this rule's implementation.

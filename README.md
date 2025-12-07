@@ -21,6 +21,8 @@ This plugin is designed to work alongside [@eslint/markdown] and is especially u
 - Supports flexible configuration for rule behavior
 - Integrates with ESLint and works alongside [@eslint/markdown]
 - Provides recommended config for easy setup
+- Rate limiting per domain to avoid triggering bot protection (Cloudflare, etc.)
+- Configurable status code allowlist for domains that return false positives
 
 **Try it live:** Check out the [Online Demo](https://eslint-online-playground.netlify.app/#eslint-plugin-markdown-links) to see the plugin in action!
 
