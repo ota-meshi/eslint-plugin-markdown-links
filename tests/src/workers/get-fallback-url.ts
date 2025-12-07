@@ -38,4 +38,44 @@ describe("getFallbackUrl", () => {
       ],
     );
   });
+
+  it("returns fallbacks for npmtrends comparisons", () => {
+    assert.deepStrictEqual(
+      getFallbackUrl(new URL("https://npmtrends.com/eslint-vs-prettier")),
+      [
+        {
+          url: "https://registry.npmjs.org/eslint",
+          headers: {
+            accept: npmAcceptHeader,
+          },
+        },
+        {
+          url: "https://registry.npmjs.org/prettier",
+          headers: {
+            accept: npmAcceptHeader,
+          },
+        },
+      ],
+    );
+  });
+
+  it("returns fallbacks for www.npmtrends comparisons", () => {
+    assert.deepStrictEqual(
+      getFallbackUrl(new URL("https://www.npmtrends.com/eslint-vs-prettier")),
+      [
+        {
+          url: "https://registry.npmjs.org/eslint",
+          headers: {
+            accept: npmAcceptHeader,
+          },
+        },
+        {
+          url: "https://registry.npmjs.org/prettier",
+          headers: {
+            accept: npmAcceptHeader,
+          },
+        },
+      ],
+    );
+  });
 });
