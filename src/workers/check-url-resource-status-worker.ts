@@ -3,6 +3,9 @@ import { checkUrlResourceStatus } from "./lib/check-url-resource-status.ts";
 import { runAsWorker } from "synckit";
 import { getCached, writeCache } from "./lib/cache.ts";
 import { getFallbackUrl } from "./lib/get-fallback-url.ts";
+import { DomainRateLimiter } from "./lib/rate-limiter.ts";
+
+let rateLimiter: DomainRateLimiter | null = null;
 
 export type Params = {
   urls: string[];
@@ -21,6 +24,17 @@ runAsWorker(checkUrls);
  */
 async function checkUrls(params: Params): Promise<UrlStatus[]> {
   const checkUrlsOptions: Options = params.checkUrlsOptions;
+
+  // Initialize rate limiter if needed
+  if (
+    checkUrlsOptions.rateLimitPerDomain &&
+    checkUrlsOptions.rateLimitPerDomain > 0
+  ) {
+    rateLimiter = new DomainRateLimiter(checkUrlsOptions.rateLimitPerDomain);
+  } else {
+    rateLimiter = null;
+  }
+
   const results = await Promise.all(
     params.urls.map(
       async (urlStr): Promise<UrlStatus> =>
@@ -93,12 +107,20 @@ async function checkUrl(
   if (!url.startsWith("http")) {
     return { url, status: { type: "ignored" } };
   }
+
+  const urlObj = new URL(url);
+  const domain = urlObj.hostname;
+
+  // Use rate limiter if enabled
+  if (rateLimiter) {
+    const status = await rateLimiter.execute(domain, () =>
+      checkUrlResourceStatus(urlObj, headers, checkUrlsOptions),
+    );
+    return { url, status };
+  }
+
   return {
     url,
-    status: await checkUrlResourceStatus(
-      new URL(url),
-      headers,
-      checkUrlsOptions,
-    ),
+    status: await checkUrlResourceStatus(urlObj, headers, checkUrlsOptions),
   };
 }

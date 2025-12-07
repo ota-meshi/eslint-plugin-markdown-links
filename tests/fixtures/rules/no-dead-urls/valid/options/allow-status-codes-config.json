@@ -1,0 +1,3 @@
+{
+  "options": [{ "allowStatusCodes": { "httpstat\\.us": [403] } }]
+}

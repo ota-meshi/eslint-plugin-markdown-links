@@ -51,7 +51,9 @@ This rule is heavily inspired by [remark-lint-no-dead-urls], and many of its opt
       "allowedAnchors": { "/./": "/^:~:/" },
       "maxRedirects": 5,
       "maxRetries": 1,
-      "timeout": 3000
+      "timeout": 3000,
+      "rateLimitPerDomain": 0,
+      "allowStatusCodes": {}
     }
   ]
 }
@@ -64,6 +66,8 @@ This rule is heavily inspired by [remark-lint-no-dead-urls], and many of its opt
 - `maxRedirects` (type: `integer`, default: `5`): Maximum number of redirects to follow when checking a link.
 - `maxRetries` (type: `integer`, default: `1`): Maximum number of retry attempts for each link check.
 - `timeout` (type: `integer`, default: `3000`): Timeout in milliseconds for each link check.
+- `rateLimitPerDomain` (type: `integer`, default: `0`): Minimum time in milliseconds to wait between requests to the same domain. Set to 0 to disable rate limiting. This helps avoid triggering rate limits or bot protection (e.g., Cloudflare) on domains like npmjs.com. A value of 1000-2000ms is recommended when checking many links to the same domain.
+- `allowStatusCodes` (type: `Record<string, number[]>`, default: `{}`): A mapping of domain patterns (as regular expressions) to arrays of HTTP status codes that should be considered successful for those domains. For example, `{ "npmjs\\.com": [403] }` would treat 403 responses from npmjs.com as successful. This is useful when certain domains return non-success status codes for bot-like requests but the links are actually valid.
 
 ## 📚 Further Reading
 

@@ -35,6 +35,8 @@ export default createRule<
       maxRedirects?: number;
       maxRetries?: number;
       timeout?: number;
+      rateLimitPerDomain?: number;
+      allowStatusCodes?: Record<string, number[]>;
     }?,
   ]
 >("no-dead-urls", {
@@ -85,6 +87,22 @@ export default createRule<
             type: "integer",
             minimum: 0,
           },
+          rateLimitPerDomain: {
+            type: "integer",
+            minimum: 0,
+          },
+          allowStatusCodes: {
+            type: "object",
+            patternProperties: {
+              ".*": {
+                type: "array",
+                items: {
+                  type: "integer",
+                },
+              },
+            },
+            additionalProperties: false,
+          },
         },
         additionalProperties: false,
       },
@@ -114,6 +132,8 @@ export default createRule<
     const maxRedirects = options?.maxRedirects ?? 5;
     const maxRetries = options?.maxRetries ?? 1;
     const timeout = options?.timeout ?? 3000;
+    const rateLimitPerDomain = options?.rateLimitPerDomain;
+    const allowStatusCodes = options?.allowStatusCodes;
 
     /**
      * Checks whether the given URL should be ignored.
@@ -144,6 +164,8 @@ export default createRule<
             maxRedirects,
             maxRetries,
             timeout,
+            rateLimitPerDomain,
+            allowStatusCodes,
             NODE_TLS_REJECT_UNAUTHORIZED:
               // eslint-disable-next-line no-process-env -- Pass environment variables to workers.
               process.env.NODE_TLS_REJECT_UNAUTHORIZED,

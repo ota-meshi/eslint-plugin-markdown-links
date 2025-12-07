@@ -14,6 +14,8 @@ export type Options = {
   maxRedirects: number;
   maxRetries: number;
   timeout: number;
+  rateLimitPerDomain?: number;
+  allowStatusCodes?: Record<string, number[]>;
   NODE_TLS_REJECT_UNAUTHORIZED?: string;
 };
 type States = {
@@ -125,6 +127,12 @@ async function checkUrlResourceStatusInternal(
       headers: {
         accept:
           "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "user-agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+        "accept-language": "en-US,en;q=0.9",
+        "sec-fetch-dest": "document",
+        "sec-fetch-mode": "navigate",
+        "sec-fetch-site": "none",
         ...headers,
       },
       method: "GET",
@@ -168,6 +176,23 @@ async function checkUrlResourceStatusInternal(
   }
 
   if (!response.ok) {
+    // Check if this status code is allowed for this URL's domain
+    if (options.allowStatusCodes) {
+      const hostname = url.hostname;
+      for (const [pattern, allowedCodes] of Object.entries(
+        options.allowStatusCodes,
+      )) {
+        const regex = new RegExp(pattern);
+        if (regex.test(hostname) && allowedCodes.includes(response.status)) {
+          // Treat this status code as successful for this domain
+          return {
+            type: "success",
+            url: url.href,
+          };
+        }
+      }
+    }
+
     if (
       state.retries < options.maxRetries &&
       // When the server says the client is wrong, we don’t try again.
