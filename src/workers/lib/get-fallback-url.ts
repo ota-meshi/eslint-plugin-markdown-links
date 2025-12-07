@@ -8,14 +8,19 @@ export type FallbackURL = {
  */
 export function getFallbackUrl(url: URL): FallbackURL[] {
   if (url.protocol !== "https:" && url.protocol !== "http:") return [];
-  if (url.hostname === "www.npmtrends.com") {
+  if (
+    url.hostname === "www.npmtrends.com" ||
+    url.hostname === "npmtrends.com"
+  ) {
     const match = /^\/(.*?)\/?$/.exec(url.pathname);
     if (!match) return [];
     const packageNames = match[1].split("-vs-");
     return packageNames.map(npmRegistryFallbackUrl);
   }
-  if (url.hostname === "www.npmjs.com") {
-    const match = /^\/package\/(.*?)\/?$/.exec(url.pathname);
+  if (url.hostname === "www.npmjs.com" || url.hostname === "npmjs.com") {
+    const match = /^\/(?:package\/)?(@[^/]+\/[^/]+|[^/]+)\/?$/.exec(
+      url.pathname,
+    );
     if (!match) return [];
     const packageName = match[1];
     return [npmRegistryFallbackUrl(packageName)];
