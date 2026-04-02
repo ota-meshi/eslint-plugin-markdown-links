@@ -1,5 +1,11 @@
 # eslint-plugin-markdown-links
 
+## 0.8.1
+
+### Patch Changes
+
+- [#103](https://github.com/ota-meshi/eslint-plugin-markdown-links/pull/103) [`e76063d`](https://github.com/ota-meshi/eslint-plugin-markdown-links/commit/e76063d173bfa532d3190acb146ad869a6a5fb9c) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency entities to v8
+
 ## 0.8.0
 
 ### Minor Changes
