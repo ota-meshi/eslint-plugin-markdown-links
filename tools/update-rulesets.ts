@@ -25,7 +25,7 @@ export const languageOptions = {
   frontmatter: "yaml",
 };
 export const plugins = {
-  markdown,
+  markdown: markdown as ESLint.Plugin,
   // eslint-disable-next-line @typescript-eslint/naming-convention -- ignore
   get "markdown-links"(): ESLint.Plugin {
     return plugin;
