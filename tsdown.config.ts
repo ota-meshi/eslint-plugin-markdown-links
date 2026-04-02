@@ -13,5 +13,6 @@ export default defineConfig([
     format: ["esm"],
     treeshake: true,
     fixedExtension: false,
+    external: ["@eslint/core"],
   },
 ]);
