@@ -4,7 +4,7 @@ import type {
   MarkdownLanguageOptions,
   MarkdownRuleDefinition,
   MarkdownRuleVisitor,
-} from "@eslint/markdown/types";
+} from "@eslint/markdown";
 import type { JSONSchema4 } from "json-schema";
 import type { Node } from "mdast";
 
