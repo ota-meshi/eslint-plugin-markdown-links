@@ -4,11 +4,14 @@ import type { Options } from "./check-url-resource-status.ts";
 import sdbm from "sdbm";
 import { version as VERSION } from "../../meta.ts";
 import type { UrlStatus } from "../check-url-resource-status-worker.ts";
+import { fileURLToPath } from "node:url";
 
 const TTL_FOR_SUCCESS = 1000 * 60 * 60 * 24; // 1day
 const TTL_FOR_ERROR = 1000 * 60; // 1minute
 
-const CACHED_ROOT_PATH = path.join(import.meta.dirname, `../.cached`);
+const filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
+const CACHED_ROOT_PATH = path.join(dirname, `../.cached`);
 
 type CachedData = {
   expired?: number;
