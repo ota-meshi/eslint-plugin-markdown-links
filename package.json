@@ -80,7 +80,7 @@
     "@oxc-node/core": "^0.0.35",
     "@shikijs/vitepress-twoslash": "^4.0.0",
     "@types/eslint": "^9.6.1",
-    "@types/eslint-scope": "^8.0.0",
+    "@types/eslint-scope": "^9.0.0",
     "@types/eslint-utils": "^3.0.5",
     "@types/estree": "^1.0.6",
     "@types/imurmurhash": "^0.1.4",
