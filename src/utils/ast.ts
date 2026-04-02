@@ -1,4 +1,5 @@
-import type { Json, Toml } from "@eslint/markdown/types";
+import type { Json, Toml } from "@eslint/markdown";
+import type { InlineMath, Math } from "mdast-util-math";
 import type {
   Blockquote,
   Break,
@@ -55,7 +56,9 @@ export type MDNode =
   | TableRow
   | Yaml
   | Toml
-  | Json;
+  | Json
+  | InlineMath
+  | Math;
 
 /**
  * Traverse the AST and apply the callback to each node.

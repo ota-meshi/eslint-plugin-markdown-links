@@ -4,7 +4,7 @@ import fs from "node:fs";
 import type {
   MarkdownLanguageContext,
   MarkdownLanguageOptions,
-} from "@eslint/markdown/types";
+} from "@eslint/markdown";
 import type { Root } from "mdast";
 const gfm = markdownPlugin.languages.gfm;
 

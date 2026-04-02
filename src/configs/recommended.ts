@@ -10,8 +10,9 @@ export const language = "markdown/gfm";
 export const languageOptions = {
   frontmatter: "yaml",
 };
-export const plugins = {
-  markdown,
+export const plugins: Record<string, ESLint.Plugin> = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- type incompatibility between @eslint/markdown and ESLint.Plugin
+  markdown: markdown as any,
   // eslint-disable-next-line @typescript-eslint/naming-convention -- ignore
   get "markdown-links"(): ESLint.Plugin {
     return plugin;
