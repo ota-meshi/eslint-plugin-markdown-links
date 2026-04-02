@@ -133,24 +133,23 @@ npm test
 
 This project provides various npm scripts to streamline development and release tasks. The main scripts are listed below:
 
-| スクリプト名      | 説明                                                       |
-| :---------------- | :--------------------------------------------------------- |
-| build             | Build everything (including metadata and type definitions) |
-| build:meta        | Generate rule metadata (for release)                       |
-| build:tsdown      | Generate artifacts using tsdown                            |
-| lint              | Run ESLint for code checks                                 |
-| eslint-fix        | Run ESLint with auto-fix                                   |
-| tsc               | TypeScript build (type check only)                         |
-| test              | Run tests with Mocha                                       |
-| cover             | Measure test coverage                                      |
-| test:update       | Update snapshot tests                                      |
-| update            | Run all code generation and formatting scripts             |
-| new               | Generate a new rule template                               |
-| docs:watch        | Preview documentation site locally                         |
-| docs:build        | Build documentation site                                   |
-| generate:version  | Generate version info (for release)                        |
-| changeset:version | Run changelog and versioning tasks (for release)           |
-| changeset:publish | Publish the package (for release)                          |
+| スクリプト名      | 説明                                             |
+| :---------------- | :----------------------------------------------- |
+| build             | Build everything (including type definitions)    |
+| build:tsdown      | Generate artifacts using tsdown                  |
+| lint              | Run ESLint for code checks                       |
+| eslint-fix        | Run ESLint with auto-fix                         |
+| tsc               | TypeScript build (type check only)               |
+| test              | Run tests with Mocha                             |
+| cover             | Measure test coverage                            |
+| test:update       | Update snapshot tests                            |
+| update            | Run all code generation and formatting scripts   |
+| new               | Generate a new rule template                     |
+| docs:watch        | Preview documentation site locally               |
+| docs:build        | Build documentation site                         |
+| generate:version  | Generate version info (for release)              |
+| changeset:version | Run changelog and versioning tasks (for release) |
+| changeset:publish | Publish the package (for release)                |
 
 For more details, see the `scripts` section in package.json.
 
