@@ -16,8 +16,7 @@
     "node": "^20.19.0 || ^22.12.0 || >=24.0.0"
   },
   "scripts": {
-    "build": "npm run build:meta && npm run build:tsdown",
-    "build:meta": "npm run ts -- ./tools/update-meta.ts",
+    "build": "npm run build:tsdown",
     "build:tsdown": "tsdown",
     "lint": "eslint . --config=./eslint.config.mjs --no-config-lookup",
     "tsc": "tsc --project tsconfig.build.json",
