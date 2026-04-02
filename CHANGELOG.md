@@ -1,5 +1,13 @@
 # eslint-plugin-markdown-links
 
+## 0.8.0
+
+### Minor Changes
+
+- [#93](https://github.com/ota-meshi/eslint-plugin-markdown-links/pull/93) [`abb135c`](https://github.com/ota-meshi/eslint-plugin-markdown-links/commit/abb135c0722ba28d7f3dc238755882bdd0a19a75) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat: add meta.languages to rules
+
+- [#92](https://github.com/ota-meshi/eslint-plugin-markdown-links/pull/92) [`c3f051b`](https://github.com/ota-meshi/eslint-plugin-markdown-links/commit/c3f051bd76e9b370490be8aae0225ade26f8547d) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Support [`@eslint/markdown`](https://github.com/eslint/markdown) v8 in peer dependency range
+
 ## 0.7.1
 
 ### Patch Changes
