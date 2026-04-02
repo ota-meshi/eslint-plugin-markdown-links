@@ -106,6 +106,7 @@ async function checkUrlResourceStatusInternal(
     };
   }
 
+  // eslint-disable-next-line n/no-unsupported-features/node-builtins -- False positive in type annotation.
   let response: Response;
 
   try {
@@ -121,6 +122,7 @@ async function checkUrlResourceStatusInternal(
     // eslint-disable-next-line no-process-env -- Apply environment variables.
     process.env.NODE_TLS_REJECT_UNAUTHORIZED =
       options.NODE_TLS_REJECT_UNAUTHORIZED;
+    // eslint-disable-next-line n/no-unsupported-features/node-builtins -- Node.js 22.16+
     response = await fetch(url, {
       headers: {
         accept:
@@ -242,6 +244,7 @@ async function retry(
 async function handleTextHtml(
   state: States,
   url: URL,
+  // eslint-disable-next-line n/no-unsupported-features/node-builtins -- False positive in type annotation.
   response: Response,
   options: Options,
 ): Promise<Result> {

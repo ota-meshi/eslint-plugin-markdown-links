@@ -9,16 +9,16 @@ import { toRegExp } from "../utils/regexp.ts";
 import path from "node:path";
 import fs from "node:fs";
 import { allowedAnchorsToAnchorAllowlist } from "../utils/allowed-anchors-option.ts";
+import { fileURLToPath } from "node:url";
 
 const RE_IS_LOCALHOST =
   /^https?:\/\/(?:localhost|127\.0\.0\.1|0\.0\.0\.0|::1)(?::\d+)?/u;
 
-const workerPath = import.meta.filename.endsWith(".ts")
-  ? path.resolve(
-      import.meta.dirname,
-      "../workers/check-url-resource-status-worker.ts",
-    )
-  : path.resolve(import.meta.dirname, "./check-url-resource-status-worker.js");
+const filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
+const workerPath = filename.endsWith(".ts")
+  ? path.resolve(dirname, "../workers/check-url-resource-status-worker.ts")
+  : path.resolve(dirname, "./check-url-resource-status-worker.js");
 if (!fs.existsSync(workerPath)) {
   throw new Error(`Worker file not found: ${workerPath}`);
 }
