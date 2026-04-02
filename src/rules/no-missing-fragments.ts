@@ -47,6 +47,7 @@ export default createRule<
       categories: [],
       listCategory: "Markdown Link",
     },
+    languages: ["markdown/*", "markdown-preferences/*"],
     fixable: undefined,
     hasSuggestions: false,
     schema: [

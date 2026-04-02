@@ -10,6 +10,7 @@ export default createRule("no-self-destination", {
       categories: ["recommended"],
       listCategory: "Markdown Link",
     },
+    languages: ["markdown/*", "markdown-preferences/*"],
     fixable: undefined,
     hasSuggestions: false,
     schema: [],

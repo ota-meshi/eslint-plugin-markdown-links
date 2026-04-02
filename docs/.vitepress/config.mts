@@ -62,7 +62,7 @@ export default async (): Promise<UserConfig<DefaultTheme.Config>> => {
                   ...["md"].flatMap((ext) => [`*.${ext}`, `**/*.${ext}`]),
                 ],
                 plugins: {
-                  markdown: eslintMarkdown,
+                  markdown: eslintMarkdown as never,
                   "markdown-links": plugin,
                 },
                 language: "markdown/gfm",
