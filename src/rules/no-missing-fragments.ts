@@ -44,7 +44,7 @@ export default createRule<
     docs: {
       description:
         "disallow missing fragment identifiers in same-file Markdown links",
-      categories: [],
+      categories: ["all"],
       listCategory: "Markdown Link",
     },
     languages: ["markdown/*", "markdown-preferences/*"],

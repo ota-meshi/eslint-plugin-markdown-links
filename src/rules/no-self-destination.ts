@@ -7,7 +7,7 @@ export default createRule("no-self-destination", {
     type: "problem",
     docs: {
       description: "disallow redundant self-destination links",
-      categories: ["recommended"],
+      categories: ["all", "recommended"],
       listCategory: "Markdown Link",
     },
     languages: ["markdown/*", "markdown-preferences/*"],
