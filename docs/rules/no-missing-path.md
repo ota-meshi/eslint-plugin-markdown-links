@@ -10,7 +10,7 @@ since: "v0.2.0"
 
 > disallow missing local file paths in Markdown links and images
 
-- ⚙️ This rule is included in `plugin.configs.recommended`.
+- ⚙️ This rule is included in `plugin.configs.all` and `plugin.configs.recommended`.
 
 ## 📖 Rule Details
 
