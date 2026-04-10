@@ -71,6 +71,7 @@ export default [
 
 This plugin provides configs:
 
+- `*.configs.all` ... All-rules config provided by the plugin.
 - `*.configs.recommended` ... Recommended config provided by the plugin.
 
 See [the rule list](https://ota-meshi.github.io/eslint-plugin-markdown-links/rules/) to get the `rules` that this plugin provides.
