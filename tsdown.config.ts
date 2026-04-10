@@ -10,7 +10,7 @@ export default defineConfig([
       "check-url-resource-status-worker":
         "src/workers/check-url-resource-status-worker.ts",
     },
-    format: ["esm"],
+    format: ["cjs", "esm"],
     treeshake: true,
     fixedExtension: false,
     deps: {
