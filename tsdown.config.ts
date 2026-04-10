@@ -16,5 +16,8 @@ export default defineConfig([
     deps: {
       neverBundle: ["@eslint/core"],
     },
+    outputOptions: {
+      exports: "named",
+    },
   },
 ]);
