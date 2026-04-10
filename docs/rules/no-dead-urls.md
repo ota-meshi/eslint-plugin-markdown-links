@@ -10,8 +10,6 @@ since: "v0.1.0"
 
 > disallow dead external link urls
 
-- ⚙️ This rule is included in `plugin.configs.all`.
-
 ## 📖 Rule Details
 
 This rule checks external HTTP/HTTPS links in Markdown files and reports any that are dead or return error responses.

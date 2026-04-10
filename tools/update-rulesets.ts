@@ -6,11 +6,10 @@ import { fileURLToPath } from "url";
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const FLAT_RULESET_NAME = {
-  all: "../src/configs/all.ts",
   recommended: "../src/configs/recommended.ts",
 };
 
-for (const rec of ["all", "recommended"] as const) {
+for (const rec of ["recommended"] as const) {
   const content = `/*
  * IMPORTANT!
  * This file has been automatically generated,

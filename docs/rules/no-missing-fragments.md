@@ -10,8 +10,6 @@ since: "v0.4.0"
 
 > disallow missing fragment identifiers in same-file Markdown links
 
-- ⚙️ This rule is included in `plugin.configs.all`.
-
 ## 📖 Rule Details
 
 This rule reports fragments (anchors) in same-file links that don't exist as headings or HTML element IDs in the current Markdown file.

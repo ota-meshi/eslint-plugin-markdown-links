@@ -202,7 +202,7 @@ export default createRule<
     docs: {
       description:
         "disallow missing local file paths in Markdown links and images",
-      categories: ["all", "recommended"],
+      categories: ["recommended"],
       listCategory: "Markdown Link",
     },
     languages: ["markdown/*", "markdown-preferences/*"],

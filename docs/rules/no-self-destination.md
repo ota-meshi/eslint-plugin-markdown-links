@@ -10,7 +10,7 @@ since: "v0.5.0"
 
 > disallow redundant self-destination links
 
-- ⚙️ This rule is included in `plugin.configs.all` and `plugin.configs.recommended`.
+- ⚙️ This rule is included in `plugin.configs.recommended`.
 
 ## 📖 Rule Details
 

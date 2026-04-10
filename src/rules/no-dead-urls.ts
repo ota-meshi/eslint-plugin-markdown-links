@@ -42,7 +42,7 @@ export default createRule<
     type: "problem",
     docs: {
       description: "disallow dead external link urls",
-      categories: ["all"],
+      categories: null,
       listCategory: "Markdown Link",
     },
     languages: ["markdown/*", "markdown-preferences/*"],
