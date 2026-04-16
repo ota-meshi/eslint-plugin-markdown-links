@@ -159,7 +159,7 @@ For more details, see the `scripts` section in package.json.
 2. Describe your changes and reference related Issues in the PR description.
 3. Make sure CI passes.
 4. If needed, create a changeset file and describe the release note content.
-   - Run `npm run changeset` to create a new changeset.
+   - Run `npx @changesets/cli` to create a new changeset.
    - Choose the appropriate version type (major/minor/patch) based on your changes.
    - When including rule names in the changeset file, specify them accurately:
      - OK: `markdown-links/rule-name`

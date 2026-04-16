@@ -37,6 +37,7 @@ export default [
 
 This plugin provides configs:
 
+- `*.configs.all` ... Enables all rules. It's meant for testing, not for production use because it changes with every minor and major version of the plugin. Use it at your own risk.
 - `*.configs.recommended` ... Recommended config provided by the plugin.
 
 See [the rule list](../rules/index.md) to get the `rules` that this plugin provides.
