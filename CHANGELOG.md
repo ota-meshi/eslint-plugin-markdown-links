@@ -1,5 +1,11 @@
 # eslint-plugin-markdown-links
 
+## 0.9.0
+
+### Minor Changes
+
+- [#108](https://github.com/ota-meshi/eslint-plugin-markdown-links/pull/108) [`ea26b19`](https://github.com/ota-meshi/eslint-plugin-markdown-links/commit/ea26b190f28c3702b95ee02fc11a27418931a41c) Thanks [@Amndeep7](https://github.com/Amndeep7)! - feat(ruleset): add 'all' config
+
 ## 0.8.1
 
 ### Patch Changes
