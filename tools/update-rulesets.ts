@@ -1,7 +1,7 @@
-import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
+import fs from "fs";
 import { rules } from "./lib/load-rules.js";
+import { fileURLToPath } from "url";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -15,10 +15,23 @@ for (const rec of ["recommended"] as const) {
  * This file has been automatically generated,
  * in order to update its content execute "npm run update"
  */
-import type { Linter } from "eslint";
-import base from "./base.ts";
-
-const ruleset: Linter.RulesRecord = {
+import type { ESLint, Linter } from "eslint";
+import plugin from "../index.ts";
+import markdown from "@eslint/markdown";
+export const name = "markdown-links/recommended";
+export const files = ["*.md", "**/*.md"];
+export const language = "markdown/gfm";
+export const languageOptions = {
+  frontmatter: "yaml",
+};
+export const plugins = {
+  markdown: markdown as ESLint.Plugin,
+  // eslint-disable-next-line @typescript-eslint/naming-convention -- ignore
+  get "markdown-links"(): ESLint.Plugin {
+    return plugin;
+  },
+};
+export const rules: Linter.RulesRecord = {
   // eslint-plugin-markdown-links rules
   ${rules
     .filter(
@@ -33,17 +46,7 @@ const ruleset: Linter.RulesRecord = {
     })
     .join(",\n")}
 };
-
-const config: Linter.Config[] = [
-  ...base,
-  {
-    rules: {
-      ...ruleset,
-    },
-  },
-];
-
-export default config;`;
+`;
 
   const filePath = path.resolve(dirname, FLAT_RULESET_NAME[rec]);
 
