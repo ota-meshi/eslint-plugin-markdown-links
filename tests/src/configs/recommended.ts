@@ -7,7 +7,7 @@ describe("`recommended` config", () => {
   it("should work. ", async () => {
     const linter = new ESLint({
       overrideConfigFile: true,
-      overrideConfig: plugin.configs.recommended,
+      overrideConfig: [plugin.configs.recommended],
     });
     const result = await linter.lintText(code, { filePath: "test/test.md" });
     const messages = result[0].messages;
