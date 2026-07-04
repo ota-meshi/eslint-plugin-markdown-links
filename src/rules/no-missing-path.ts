@@ -10,6 +10,7 @@ import { iterateAttrs, iterateHTMLTokens } from "../utils/html.ts";
 import { LRUCache } from "../utils/lru-cache.ts";
 import type { Slugify } from "../utils/slug.ts";
 import { createSlugify, type SlugifyKind } from "../utils/slug.ts";
+import { decodeURIComponentSafe } from "../utils/url.ts";
 
 type AnchorOption = {
   ignoreCase: boolean;
@@ -98,6 +99,7 @@ abstract class AbsFragments implements Fragments {
       } else {
         targetFragment = rawFragment.value;
       }
+      targetFragment = decodeURIComponentSafe(targetFragment);
       return options.ignoreCase ? targetFragment.toLowerCase() : targetFragment;
     }
 
@@ -304,17 +306,18 @@ export default createRule<
      * Get the absolute path of a link or image.
      */
     function getLinkFullPath(fileUrl: string): string {
-      if (fileUrl.startsWith("/")) {
+      const decodedFileUrl = decodeURIComponentSafe(fileUrl);
+      if (decodedFileUrl.startsWith("/")) {
         // - [a](/foo.md)
-        return path.join(basePath, fileUrl.slice(1));
+        return path.join(basePath, decodedFileUrl.slice(1));
       }
-      if (fileUrl.startsWith("./") || fileUrl.startsWith("../")) {
+      if (decodedFileUrl.startsWith("./") || decodedFileUrl.startsWith("../")) {
         // - [a](./foo.md)
-        return path.join(dirname, fileUrl);
+        return path.join(dirname, decodedFileUrl);
       }
 
       // - [a](foo.md)
-      return path.join(dirname, fileUrl);
+      return path.join(dirname, decodedFileUrl);
     }
 
     /**
@@ -377,11 +380,13 @@ export default createRule<
       reportNode: Link | Image | Definition,
       resolved: LinkPathWithFragment,
     ) {
-      if (RE_GITHUB_LINE_REFERENCE_FRAGMENT.test(resolved.fragment)) return;
+      const fragment = decodeURIComponentSafe(resolved.fragment);
+      if (RE_GITHUB_LINE_REFERENCE_FRAGMENT.test(fragment)) return;
       if (
         anchorAllowlist.some(([url, anchor]) => {
           return (
-            url.test(resolved.relativePath) && anchor.test(resolved.fragment)
+            url.test(resolved.relativePath) &&
+            (anchor.test(resolved.fragment) || anchor.test(fragment))
           );
         })
       )
@@ -406,7 +411,7 @@ export default createRule<
 
       const checker = fragments.fragmentChecker(anchorOption);
 
-      if (checker(resolved.fragment)) {
+      if (checker(fragment)) {
         return;
       }
 

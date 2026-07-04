@@ -56,10 +56,16 @@ Code:
  13 | Also invalid: [wrong name](#wrong-name).
     |               ^~~~~~~~~~~~~~~~~~~~~~~~~ [3]
  14 |
+ 15 | ## Encoded Hash {#%23anchor}
+ 16 |
+ 17 | This should not match [decoded custom id](#anchor).
+    |                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~ [4]
+ 18 |
 
 [1] The fragment 'non-existent-section' is not defined in this file.
 [2] The fragment 'missing-fragment' is not defined in this file.
 [3] The fragment 'wrong-name' is not defined in this file.
+[4] The fragment 'anchor' is not defined in this file.
 ---
 
 

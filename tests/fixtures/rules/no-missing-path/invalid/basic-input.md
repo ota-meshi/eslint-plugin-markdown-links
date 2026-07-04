@@ -26,6 +26,7 @@
 
 - [missing-anchor](target.md#not-exist-anchor)
 - [missing-anchor](../test-target.md#not-exist-anchor)
+- [missing-anchor](../test-target.md#anchor)
 
 # Valid: HTML Reference Non-existent Anchor
 

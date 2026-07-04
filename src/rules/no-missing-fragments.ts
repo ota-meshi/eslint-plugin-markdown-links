@@ -11,6 +11,7 @@ import type {
 import { iterateAttrs, iterateHTMLTokens } from "../utils/html.ts";
 import type { Slugify } from "../utils/slug.ts";
 import { createSlugify } from "../utils/slug.ts";
+import { decodeURIComponentSafe } from "../utils/url.ts";
 
 type RawFragmentMdHeading = { type: "md-heading"; value: string };
 type RawFragmentHTMLId = { type: "id"; value: string };
@@ -100,6 +101,7 @@ export default createRule<
             }
             return raw.value; // type === 'id'
           })
+          .map((fragment) => decodeURIComponentSafe(fragment))
           .map((fragment) => (ignoreCase ? fragment.toLowerCase() : fragment)),
       );
       for (const node of nodes) {
@@ -107,9 +109,10 @@ export default createRule<
         const fragment = url.slice(1); // Remove the # prefix
         if (!fragment) continue; // Empty fragment
 
+        const decodedFragment = decodeURIComponentSafe(fragment);
         const normalizedFragment = ignoreCase
-          ? fragment.toLowerCase()
-          : fragment;
+          ? decodedFragment.toLowerCase()
+          : decodedFragment;
         if (availableFragments.has(normalizedFragment)) continue;
 
         context.report({
