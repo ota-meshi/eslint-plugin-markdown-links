@@ -17,3 +17,7 @@ You can also reference [this subsection](#subsection).
 ## Code Examples
 
 Reference to the [code examples](#code-examples) section.
+
+## 日本語
+
+Reference to the [Japanese heading](#%E6%97%A5%E6%9C%AC%E8%AA%9E) section.

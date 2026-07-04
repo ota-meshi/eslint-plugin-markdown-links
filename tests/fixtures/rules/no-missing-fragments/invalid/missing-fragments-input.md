@@ -11,3 +11,7 @@ This is an invalid reference to [non-existent section](#non-existent-section).
 Another invalid reference to [missing fragment](#missing-fragment).
 
 Also invalid: [wrong name](#wrong-name).
+
+## Encoded Hash {#%23anchor}
+
+This should not match [decoded custom id](#anchor).
