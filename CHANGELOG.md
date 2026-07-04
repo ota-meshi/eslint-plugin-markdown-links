@@ -1,5 +1,13 @@
 # eslint-plugin-markdown-links
 
+## 0.9.1
+
+### Patch Changes
+
+- [#122](https://github.com/ota-meshi/eslint-plugin-markdown-links/pull/122) [`46cbc5f`](https://github.com/ota-meshi/eslint-plugin-markdown-links/commit/46cbc5f3307a4e1734cac9728d1e658c94951b65) Thanks [@ota-meshi](https://github.com/ota-meshi)! - Fix [`markdown-links/no-missing-path`](https://ota-meshi.github.io/eslint-plugin-markdown-links/rules/no-missing-path.html) to resolve URL-encoded local file paths and anchor fragments.
+
+- [#122](https://github.com/ota-meshi/eslint-plugin-markdown-links/pull/122) [`46cbc5f`](https://github.com/ota-meshi/eslint-plugin-markdown-links/commit/46cbc5f3307a4e1734cac9728d1e658c94951b65) Thanks [@ota-meshi](https://github.com/ota-meshi)! - Fix [`markdown-links/no-missing-fragments`](https://ota-meshi.github.io/eslint-plugin-markdown-links/rules/no-missing-fragments.html) to resolve URL-encoded anchor fragments.
+
 ## 0.9.0
 
 ### Minor Changes
