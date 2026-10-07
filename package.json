@@ -65,7 +65,7 @@
     "fast-content-type-parse": "^3.0.0",
     "github-slugger": "^2.0.0",
     "sdbm": "^3.0.0",
-    "synckit": "^0.11.11",
+    "synckit": "^0.12.0",
     "undici": "^7.15.0"
   },
   "devDependencies": {
