@@ -34,6 +34,15 @@
 - [target](../test-target.md#dupe)
 - [target](../test-target.md#dupe-1)
 
+# Valid: Named HTML Anchors And Top
+
+- [Markdown named anchor](../test-target.md#legacy-anchor)
+- [Markdown top](../test-target.md#top)
+- [Markdown uppercase top](../test-target.md#TOP)
+- [HTML named anchor](../test-target.html#legacy-anchor)
+- [HTML top](../test-target.html#top)
+- [HTML uppercase top](../test-target.html#TOP)
+
 # Valid: GitHub Line Reference
 
 - [target](../test-target.md#L42)
