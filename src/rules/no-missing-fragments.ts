@@ -19,13 +19,17 @@ type RawFragmentHTMLId = { type: "id"; value: string };
 type RawFragment = RawFragmentMdHeading | RawFragmentHTMLId;
 
 /**
- * Parse HTML to extract IDs.
+ * Parse HTML to extract IDs, and names of `a` elements.
  */
 function* parseHtmlToExtractIdValues(code: string): Iterable<string> {
   for (const tarOrText of iterateHTMLTokens(code)) {
     if (tarOrText.type !== "opening-tag") continue;
     for (const attr of iterateAttrs(tarOrText.value)) {
-      if (attr.name === "id" && attr.value) {
+      if (!attr.value) continue;
+      if (
+        attr.name === "id" ||
+        (attr.name === "name" && tarOrText.tagName === "a")
+      ) {
         yield attr.value;
       }
     }
@@ -114,6 +118,8 @@ export default createRule<
           ? decodedFragment.toLowerCase()
           : decodedFragment;
         if (availableFragments.has(normalizedFragment)) continue;
+        // `#top` scrolls to the top of the document.
+        if (decodedFragment.toLowerCase() === "top") continue;
 
         context.report({
           node,
