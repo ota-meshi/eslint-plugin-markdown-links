@@ -34,7 +34,7 @@
 - [target](../test-target.md#dupe)
 - [target](../test-target.md#dupe-1)
 
-# Valid: Named HTML Anchors And Top
+# Valid: Named HTML Anchors and Top
 
 - [Markdown named anchor](../test-target.md#legacy-anchor)
 - [Markdown top](../test-target.md#top)
