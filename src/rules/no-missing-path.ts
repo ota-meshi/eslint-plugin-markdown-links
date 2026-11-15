@@ -36,7 +36,11 @@ function* parseHtmlToExtractIdValues(
   for (const tarOrText of iterateHTMLTokens(code)) {
     if (tarOrText.type !== "opening-tag") continue;
     for (const attr of iterateAttrs(tarOrText.value)) {
-      if (attr.name === "id" && attr.value) {
+      if (
+        (attr.name === "id" ||
+          (tarOrText.tagName === "a" && attr.name === "name")) &&
+        attr.value
+      ) {
         yield { type: "id", value: attr.value };
       }
     }
@@ -104,6 +108,8 @@ abstract class AbsFragments implements Fragments {
     }
 
     return (fragment: string) => {
+      if (fragment.toLowerCase() === "top") return true;
+
       const fragmentToCheck = options.ignoreCase
         ? fragment.toLowerCase()
         : fragment;
