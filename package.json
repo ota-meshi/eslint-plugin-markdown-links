@@ -60,7 +60,7 @@
     "eslint": ">=9.0.0"
   },
   "dependencies": {
-    "@mdit-vue/shared": "^3.0.2",
+    "@mdit-vue/shared": "^4.0.0",
     "entities": "^8.0.0",
     "fast-content-type-parse": "^3.0.0",
     "github-slugger": "^2.0.0",
