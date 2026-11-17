@@ -12,7 +12,7 @@ since: "v0.4.0"
 
 ## 📖 Rule Details
 
-This rule reports fragments (anchors) in same-file links that don't exist as headings or HTML element IDs in the current Markdown file.
+This rule reports fragments (anchors) in same-file links that don't exist as headings, HTML element IDs, or `<a name="...">` anchors in the current Markdown file. `#top` is always allowed, since browsers scroll to the top of the document for it.
 
 Fragment identifiers in Markdown links allow you to navigate to specific sections within the same document. This rule helps ensure that all fragment references are valid.
 

@@ -70,6 +70,32 @@ Code:
 
 
 Test: no-missing-fragments >> invalid
+Filename: tests/fixtures/rules/no-missing-fragments/invalid/name-attribute-input.md
+Language: markdown/gfm
+LanguageOptions:
+  frontmatter: yaml
+Plugins: unable to serialize
+
+Code:
+  1 | # Name Attribute
+  2 |
+  3 | Only `a` elements create anchors from the `name` attribute.
+  4 |
+  5 | <div name="div-name"></div>
+  6 |
+  7 | <input name="input-name">
+  8 |
+  9 | [div name](#div-name) [input name](#input-name)
+    | ^~~~~~~~~~~~~~~~~~~~~ ^~~~~~~~~~~~~~~~~~~~~~~~~
+    | [1]                   [2]
+ 10 |
+
+[1] The fragment 'div-name' is not defined in this file.
+[2] The fragment 'input-name' is not defined in this file.
+---
+
+
+Test: no-missing-fragments >> invalid
 Filename: tests/fixtures/rules/no-missing-fragments/invalid/slugify-github-input.md
 Language: markdown/gfm
 LanguageOptions:
