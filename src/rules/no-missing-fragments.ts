@@ -25,7 +25,11 @@ function* parseHtmlToExtractIdValues(code: string): Iterable<string> {
   for (const tarOrText of iterateHTMLTokens(code)) {
     if (tarOrText.type !== "opening-tag") continue;
     for (const attr of iterateAttrs(tarOrText.value)) {
-      if (attr.name === "id" && attr.value) {
+      if (
+        (attr.name === "id" ||
+          (tarOrText.tagName === "a" && attr.name === "name")) &&
+        attr.value
+      ) {
         yield attr.value;
       }
     }
@@ -108,6 +112,7 @@ export default createRule<
         const url = node.url;
         const fragment = url.slice(1); // Remove the # prefix
         if (!fragment) continue; // Empty fragment
+        if (decodeURIComponentSafe(fragment).toLowerCase() === "top") continue;
 
         const decodedFragment = decodeURIComponentSafe(fragment);
         const normalizedFragment = ignoreCase

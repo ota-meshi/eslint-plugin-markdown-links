@@ -17,3 +17,9 @@ Reference to [encoded id](#%E6%97%A5%E6%9C%AC%E8%AA%9E).
 ## Regular Heading
 
 And a [regular heading](#regular-heading) reference.
+
+<a name="legacy-anchor"></a>
+
+Reference to [legacy named anchor](#legacy-anchor).
+
+This [top link](#top) and [uppercase top link](#TOP) are valid.

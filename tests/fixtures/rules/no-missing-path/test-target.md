@@ -29,3 +29,7 @@ Encoded id contents
 ## Dupe
 
 ## Dupe
+
+<a name="legacy-anchor"></a>
+
+<span name="not-an-anchor">This is not an anchor.</span>
